@@ -1,1 +1,1 @@
-# Braendstofpriser
+# Brændstofpriser - Home Assistant integration
