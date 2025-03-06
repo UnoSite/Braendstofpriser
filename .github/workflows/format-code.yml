@@ -40,7 +40,7 @@ jobs:
         run: |
           if [ $(git diff HEAD | wc -l) -gt 30 ]
           then
-          git config user.email "IsItPayday@noreply.github.com"
+          git config user.email "Braendstofpriser@noreply.github.com"
           git config user.name "GitHub Actions"
           git commit -m "Run formatting" -a || true
           git push || true
