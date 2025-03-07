@@ -1,0 +1,36 @@
+name: Fetch Fuel Prices
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Kører hver time
+  workflow_dispatch:  # Tillader manuel kørsel også
+
+jobs:
+  fetch_prices:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Tjek repo ud
+      uses: actions/checkout@v4
+
+    - name: Opsæt Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Installer afhængigheder
+      run: pip install requests beautifulsoup4
+
+    - name: Kør data-skraber
+      run: python .github/scripts/fetch_prices.py
+
+    - name: Konfigurer Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Commit og push, hvis der er ændringer
+      run: |
+        git add data/listprices.json
+        git diff --staged --quiet || git commit -m "Opdateret brændstofpriser"
+        git push
