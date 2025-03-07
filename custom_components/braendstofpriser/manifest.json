@@ -1,1 +1,17 @@
-
+{
+    "domain": "braendstofpriser",
+    "name": "Brændstofpriser",
+    "codeowners": [
+        "@UnoSite"
+    ],
+    "config_flow": true,
+    "dependencies": [],
+    "documentation": "https://github.com/UnoSite/Braendstofpriser",
+    "iot_class": "cloud_polling",
+    "issue_tracker": "https://github.com/UnoSite/Braendstofpriser/issues",
+    "loggers": [
+        "custom_components.braendstofpriser"
+    ],
+    "requirements": [],
+    "version": "0.1.0"
+}
