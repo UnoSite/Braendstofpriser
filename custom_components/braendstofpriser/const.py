@@ -1,10 +1,25 @@
+"""
+Konstantfil for Brændstofpriser integrationen.
+
+Denne fil indeholder:
+- Domænenavn for integrationen.
+- Konfigurationsnøgler.
+- API URL til brændstofpris-data.
+- En liste over understøttede brændstofprodukter.
+- En omvendt map for produktopslag (fra navn til nøgle).
+"""
+
+# Domænenavn for integrationen
 DOMAIN = "braendstofpriser"
 
-CONF_COMPANIES = "companies"
-CONF_PRODUCTS = "products"
+# Konfigurationsnøgler brugt i config_flow.py
+CONF_COMPANIES = "companies"  # Valgte selskaber
+CONF_PRODUCTS = "products"  # Valgte brændstofprodukter
 
+# URL til API, der leverer brændstofpriser
 API_URL = "https://raw.githubusercontent.com/UnoSite/Braendstofpriser/refs/heads/main/data/listprices.json"
 
+# Dictionary over understøttede brændstofprodukter
 PRODUCTS = {
     "blyfri_92": "Benzin 92 (E5)",
     "blyfri_95_e10": "Benzin 95 (E10)",
@@ -18,6 +33,5 @@ PRODUCTS = {
     "el_lyn": "EL (Turbo)"
 }
 
-PRODUCT_NAME_MAP = {  # Vendt map for hurtigere opslag hvis nødvendigt
-    v: k for k, v in PRODUCTS.items()
-}
+# Omvendt opslag for produktnavne → nøgler (bruges i config_flow og sensor)
+PRODUCT_NAME_MAP = {v: k for k, v in PRODUCTS.items()}
