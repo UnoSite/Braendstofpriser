@@ -28,8 +28,8 @@ jobs:
 
     - name: Konfigurer Git
       run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git config --global user.name 'Price_Fetcher[bot]'
+        git config --global user.email 'Price_Fetcher[bot]@users.noreply.github.com'
 
     - name: Commit og push hvis der er ændringer
       run: |
