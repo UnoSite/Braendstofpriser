@@ -2,8 +2,8 @@ name: Fetch Fuel Prices
 
 on:
   schedule:
-    - cron: '15 * * * *'  # Kører hver time
-  workflow_dispatch:  # Tillader manuel kørsel også
+    - cron: '15 * * * *'
+  workflow_dispatch:
 
 jobs:
   fetch_prices:
@@ -12,6 +12,8 @@ jobs:
     steps:
     - name: Tjek repo ud
       uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.PAT_TOKEN }}
 
     - name: Opsæt Python
       uses: actions/setup-python@v5
@@ -29,8 +31,10 @@ jobs:
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-    - name: Commit og push, hvis der er ændringer
+    - name: Commit og push hvis der er ændringer
       run: |
         git add data/listprices.json
-        git diff --staged --quiet || git commit -m "Opdateret brændstofpriser"
-        git push
+        if ! git diff --cached --quiet; then
+          git commit -m "Opdateret brændstofpriser"
+          git push
+        fi
