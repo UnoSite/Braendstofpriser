@@ -1,5 +1,5 @@
 import requests
-from .const import API_URL
+from .const import *
 
 def fetch_fuel_data():
     """Fetches the fuel prices data from the external GitHub JSON file."""
