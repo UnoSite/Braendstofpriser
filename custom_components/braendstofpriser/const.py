@@ -17,3 +17,7 @@ PRODUCTS = {
     "el_hurtig": "EL (Hurtig)",
     "el_lyn": "EL (Turbo)"
 }
+
+PRODUCT_NAME_MAP = {  # Vendt map for hurtigere opslag hvis nødvendigt
+    v: k for k, v in PRODUCTS.items()
+}
