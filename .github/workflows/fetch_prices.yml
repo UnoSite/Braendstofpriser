@@ -2,7 +2,7 @@ name: Fetch Fuel Prices
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Kører hver time
+    - cron: '15 * * * *'  # Kører hver time
   workflow_dispatch:  # Tillader manuel kørsel også
 
 jobs:
