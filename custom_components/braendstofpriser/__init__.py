@@ -40,7 +40,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """
     Fjerner en konfigurationsindgang for integrationen.
 
-    - Fjerner sensorer tilknyttet denne entry.
+    - Fjerner alle platforme tilknyttet denne entry.
     - Fjerner data fra `hass.data` for at frigøre hukommelse.
 
     Args:
@@ -52,11 +52,11 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """
     _LOGGER.info("Afregistrerer Brændstofpriser integration for entry: %s", entry.entry_id)
 
-    unload_ok = await hass.config_entries.async_forward_entry_unload(entry, "sensor")
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, SUPPORTED_PLATFORMS)
 
     if unload_ok:
         _LOGGER.debug("Fjerner entry fra hass.data")
-        hass.data[DOMAIN].pop(entry.entry_id)
+        hass.data[DOMAIN].pop(entry.entry_id, None)
         _LOGGER.info("Brændstofpriser integration afregistreret for entry: %s", entry.entry_id)
     else:
         _LOGGER.warning("Kunne ikke afregistrere Brændstofpriser integration for entry: %s", entry.entry_id)
