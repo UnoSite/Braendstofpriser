@@ -39,7 +39,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     entities = []
     for company in companies:
         for product in products:
-            _LOGGER.debug("Opretter sensor for %s - %s", company, PRODUCTS[product])
+            _LOGGER.debug("Opretter sensor for %s - %s", company, PRODUCTS.get(product, product))
             entities.append(FuelPriceSensor(coordinator, entry.entry_id, company, product))
 
     async_add_entities(entities)
@@ -115,7 +115,7 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
         self._company = company
         self._product = product
         self._attr_unique_id = f"{entry_id}_{company}_{product}"
-        self._attr_name = f"{company} {PRODUCTS[product]}"
+        self._attr_name = f"{company} {PRODUCTS.get(product, product)}"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{entry_id}_{company}")},
             name=f"{company} Brændstofpriser",
@@ -137,10 +137,22 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
             float | None: Den aktuelle pris, eller None hvis ingen data findes.
         """
         for entry in self.coordinator.data:
-            if entry['selskab'] == self._company and entry['produkt'] == self._product:
-                _LOGGER.debug("Opdateret pris for %s: %.2f kr.", self._attr_name, float(entry['pris']))
-                return float(entry['pris'])
-        
+            selskab = entry.get("selskab")
+            produkt = entry.get("produkt")
+            pris = entry.get("pris")
+
+            # Tjek om de nødvendige nøgler findes
+            if selskab is None or produkt is None or pris is None:
+                _LOGGER.warning("Ugyldig API-data modtaget: %s", entry)
+                continue  # Spring dette entry over
+
+            if selskab == self._company and produkt == self._product:
+                try:
+                    return float(pris)  # Konverter til float
+                except (TypeError, ValueError):
+                    _LOGGER.error("Ugyldig pris-data modtaget: %s", pris)
+                    return None  # Returner None ved fejl
+
         _LOGGER.warning("Ingen pris fundet for %s", self._attr_name)
         return None
 
@@ -164,5 +176,5 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
         """
         return {
             "selskab": self._company,
-            "produkt": PRODUCTS[self._product]
+            "produkt": PRODUCTS.get(self._product, self._product)  # Brug læseligt navn
         }
