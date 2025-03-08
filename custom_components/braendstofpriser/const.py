@@ -7,6 +7,7 @@ Denne fil indeholder:
 - API URL til brændstofpris-data.
 - En liste over understøttede brændstofprodukter.
 - En omvendt map for produktopslag (fra navn til nøgle).
+- En liste af understøttede platforme.
 """
 
 # Domænenavn for integrationen
@@ -35,3 +36,6 @@ PRODUCTS = {
 
 # Omvendt opslag for produktnavne → nøgler (bruges i config_flow og sensor)
 PRODUCT_NAME_MAP = {v: k for k, v in PRODUCTS.items()}
+
+# Understøttede platforme (bruges i __init__.py ved async_forward_entry_setups)
+SUPPORTED_PLATFORMS = ["sensor"]
