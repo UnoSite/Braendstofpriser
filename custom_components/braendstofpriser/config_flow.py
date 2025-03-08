@@ -2,10 +2,10 @@ import logging
 import voluptuous as vol
 import requests
 from homeassistant import config_entries
-from homeassistant.core import callback
+from homeassistant.core import callback, HomeAssistant
 from homeassistant.helpers import selector
 from .const import *
-from .sensor import remove_unused_entities_and_devices
+from .sensor import remove_unused_entities_and_devices  # Importer oprydningsfunktionen
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -130,16 +130,24 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
 
         if user_input is not None:
             _LOGGER.debug("Opdaterede produkter: %s", user_input[CONF_PRODUCTS])
-            self.hass.config_entries.async_update_entry(self.config_entry, data={
+            updated_data = {
                 CONF_COMPANIES: self.config_entry.data[CONF_COMPANIES],
                 CONF_PRODUCTS: [PRODUCT_NAME_MAP[name] for name in user_input[CONF_PRODUCTS]]
-            })
+            }
+            self.hass.config_entries.async_update_entry(self.config_entry, data=updated_data)
 
-            # **🔹 Oprydning af gamle sensorer og enheder**
-            await remove_unused_entities_and_devices(self.hass, self.config_entry)
+            # Hent aktive enheder fra den nye konfiguration
+            active_entity_ids = set()
+            for company in updated_data[CONF_COMPANIES]:
+                for product in updated_data[CONF_PRODUCTS]:
+                    active_entity_ids.add(f"{self.config_entry.entry_id}_{company}_{product}")
 
-            # Genindlæs integrationen for at anvende ændringer
+            # **Genindlæs integrationen for at anvende ændringer**
             await self.hass.config_entries.async_reload(self.config_entry.entry_id)
+
+            # **Fjern gamle sensorer og enheder efter genindlæsning**
+            await remove_unused_entities_and_devices(self.hass, self.config_entry, active_entity_ids)
+
             return self.async_create_entry(title="", data={})
 
         schema = vol.Schema({
