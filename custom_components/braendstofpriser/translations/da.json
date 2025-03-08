@@ -5,14 +5,14 @@
                 "title": "Vælg selskaber",
                 "description": "Her skal du vælge hvilke selskaber du vil have priser fra",
                 "data": {
-                    "companies": "Vælg selskaber"
+                    "companies": "Vælg selskaber:"
                 }
             },
             "products": {
                 "title": "Vælg produkter",
                 "description": "Her skal du vælge hvilke produkter du vil have priser fra",
                 "data": {
-                    "products": "Vælg produkter"
+                    "products": "Vælg produkter:"
                 }
             }
         },
