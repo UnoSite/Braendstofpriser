@@ -5,6 +5,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, CoordinatorEntity, UpdateFailed
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
+from homeassistant.helpers.device_registry import async_get as async_get_device_registry
 from homeassistant.helpers.entity import DeviceInfo
 from .const import *
 from .api import *
@@ -46,14 +47,29 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
     async_add_entities(entities)
 
-    # **🔹 Fjern gamle sensorer, der ikke længere er valgt**
+    # **Fjern gamle sensorer og enheder, der ikke længere er relevante**
+    await remove_unused_entities_and_devices(hass, entry, existing_entity_ids)
+
+    _LOGGER.info("Brændstofpriser sensorer oprettet for entry: %s", entry.entry_id)
+
+async def remove_unused_entities_and_devices(hass: HomeAssistant, entry: ConfigEntry, active_entity_ids: set):
+    """Fjerner gamle sensorer og enheder, der ikke længere er relevante."""
     entity_registry = async_get_entity_registry(hass)
+    device_registry = async_get_device_registry(hass)
+
+    # **Fjern gamle sensorer, der ikke længere er i brug**
     for entity_id, entity in list(entity_registry.entities.items()):
-        if entity.unique_id.startswith(entry.entry_id) and entity.unique_id not in existing_entity_ids:
+        if entity.unique_id.startswith(entry.entry_id) and entity.unique_id not in active_entity_ids:
             _LOGGER.info("Fjerner forældet sensor: %s", entity_id)
             entity_registry.async_remove(entity_id)
 
-    _LOGGER.info("Brændstofpriser sensorer oprettet for entry: %s", entry.entry_id)
+    # **Fjern enheder uden aktive sensorer**
+    for device_id, device in list(device_registry.devices.items()):
+        if entry.entry_id in device.config_entries:
+            related_entities = [e for e in entity_registry.entities.values() if e.device_id == device.id]
+            if not related_entities:
+                _LOGGER.info("Fjerner forældet enhed: %s", device.name)
+                device_registry.async_remove_device(device.id)
 
 class FuelPriceCoordinator(DataUpdateCoordinator):
     """Håndterer API-kald og opdatering af sensorer."""
@@ -134,4 +150,4 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
         return {
             "selskab": self._company,
             "produkt": PRODUCTS.get(self._product, self._product)
-        }
+            }
