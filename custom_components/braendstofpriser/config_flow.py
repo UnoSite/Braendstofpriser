@@ -94,7 +94,7 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
         self.config_entry = config_entry
 
     async def async_step_init(self, user_input=None):
-        """Trin 1: Opdater selskaber."""
+        """Starter reconfiguration-processen."""
         return await self.async_step_select_companies()
 
     async def async_step_select_companies(self, user_input=None):
