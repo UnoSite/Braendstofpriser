@@ -15,7 +15,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     Dette kaldes, når brugeren tilføjer integrationen via Home Assistant UI.
     - Lagrer config entry i `hass.data` under `DOMAIN`.
-    - Sender opsætningen videre til 'sensor' platformen.
+    - Sender opsætningen videre til understøttede platforme.
 
     Args:
         hass (HomeAssistant): Home Assistant instansen.
@@ -29,9 +29,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = entry
 
-    # Forward entry setup til sensor platform
-    _LOGGER.debug("Sender opsætning videre til sensor platform")
-    await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
+    # Forward entry setup til alle understøttede platforme
+    _LOGGER.debug("Sender opsætning videre til platforme: %s", SUPPORTED_PLATFORMS)
+    await hass.config_entries.async_forward_entry_setups(entry, SUPPORTED_PLATFORMS)
 
     _LOGGER.info("Brændstofpriser integration opsat for entry: %s", entry.entry_id)
     return True
