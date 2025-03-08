@@ -2,12 +2,13 @@ name: Fetch Fuel Prices
 
 on:
   schedule:
-    - cron: '15 * * * *'
+    - cron: '15 */6 * * *'
   workflow_dispatch:
 
 jobs:
   fetch_prices:
     runs-on: ubuntu-latest
+    timeout-minutes: 1
 
     steps:
     - name: Tjek repo ud
