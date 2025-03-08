@@ -15,7 +15,7 @@ def fetch_companies():
 
     - Forsøger at hente data fra `API_URL`.
     - Returnerer en **alfabetisk sorteret** liste af selskaber.
-    - Hvis der opstår fejl, returneres en tom liste.
+    - Hvis der opstår fejl, returneres en tom dictionary.
 
     Returns:
         dict: Dictionary med selskaber til multi-select UI.
@@ -34,7 +34,7 @@ def fetch_companies():
         else:
             _LOGGER.debug("Modtaget %d selskaber fra API.", len(companies))
 
-        return {company: company for company in companies}  # Returner en dictionary
+        return {company: company for company in companies}
 
     except requests.Timeout:
         _LOGGER.error("Timeout ved forsøg på at hente selskaber fra API.")
@@ -52,9 +52,6 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Håndterer opsætningen af Brændstofpriser integrationen."""
 
     VERSION = 1
-
-    def __init__(self):
-        self.companies = []  # Gemmer valgte selskaber
 
     async def async_step_user(self, user_input=None):
         """
@@ -74,10 +71,9 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             _LOGGER.debug("Brugeren har valgt selskaber: %s", user_input[CONF_COMPANIES])
-            self.companies = user_input[CONF_COMPANIES]
+            self.context["selected_companies"] = user_input[CONF_COMPANIES]
             return await self.async_step_products()
 
-        # Hent selskaber i en synkron helper
         companies = await self.hass.async_add_executor_job(fetch_companies)
 
         if not companies:
@@ -87,7 +83,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         schema = vol.Schema({
             vol.Required(CONF_COMPANIES, default=[]): selector.SelectSelector(
                 selector.SelectSelectorConfig(
-                    options=list(companies.keys()),  # Multi-select med alfabetisk sorteret liste
+                    options=list(companies.keys()),
                     multiple=True,
                     mode=selector.SelectSelectorMode.LIST,
                 )
@@ -97,7 +93,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="user",
             data_schema=schema,
-            description_placeholders={"text": "Her skal du vælge hvilke selskaber du vil have priser fra"}
+            description_placeholders={"text": "Vælg de selskaber, du vil overvåge brændstofpriser fra"}
         )
 
     async def async_step_products(self, user_input=None):
@@ -111,21 +107,21 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             user_input (dict, optional): Brugerens valg fra UI.
 
         Returns:
-            FlowResult: Gemmer konfiguration eller viser valgmuligheder.
+            FlowResult: Gemmer konfigurationen eller viser valgmuligheder.
         """
         _LOGGER.info("Opsætning af Brændstofpriser: Trin 2 - Vælg produkter")
 
         if user_input is not None:
             _LOGGER.debug("Brugeren har valgt produkter: %s", user_input[CONF_PRODUCTS])
             return self.async_create_entry(title="Brændstofpriser", data={
-                CONF_COMPANIES: self.companies,
-                CONF_PRODUCTS: user_input[CONF_PRODUCTS]
+                CONF_COMPANIES: self.context["selected_companies"],
+                CONF_PRODUCTS: [PRODUCT_NAME_MAP[name] for name in user_input[CONF_PRODUCTS]]  # Konverter til interne nøgler
             })
 
         schema = vol.Schema({
             vol.Required(CONF_PRODUCTS, default=[]): selector.SelectSelector(
                 selector.SelectSelectorConfig(
-                    options=PRODUCT_NAME_MAP,  # Viser korrekte produktnavne
+                    options=list(PRODUCT_NAME_MAP.keys()),  # Viser korrekte produktnavne
                     multiple=True,
                     mode=selector.SelectSelectorMode.LIST,
                 )
@@ -135,7 +131,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="products",
             data_schema=schema,
-            description_placeholders={"text": "Her skal du vælge hvilke produkter du vil have priser fra"}
+            description_placeholders={"text": "Vælg de brændstofprodukter, du vil overvåge priser for"}
         )
 
     @staticmethod
@@ -167,7 +163,10 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
 
         if user_input is not None:
             _LOGGER.debug("Brugeren har opdateret indstillinger: %s", user_input)
-            return self.async_create_entry(title="", data=user_input)
+            return self.async_create_entry(title="", data={
+                CONF_COMPANIES: user_input[CONF_COMPANIES],
+                CONF_PRODUCTS: [PRODUCT_NAME_MAP[name] for name in user_input[CONF_PRODUCTS]]
+            })
 
         companies = await self.hass.async_add_executor_job(fetch_companies)
 
@@ -179,9 +178,9 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
                     mode=selector.SelectSelectorMode.LIST,
                 )
             ),
-            vol.Required(CONF_PRODUCTS, default=self.config_entry.data.get(CONF_PRODUCTS, [])): selector.SelectSelector(
+            vol.Required(CONF_PRODUCTS, default=[PRODUCTS[p] for p in self.config_entry.data.get(CONF_PRODUCTS, [])]): selector.SelectSelector(
                 selector.SelectSelectorConfig(
-                    options=PRODUCT_NAME_MAP,
+                    options=list(PRODUCT_NAME_MAP.keys()),
                     multiple=True,
                     mode=selector.SelectSelectorMode.LIST,
                 )
