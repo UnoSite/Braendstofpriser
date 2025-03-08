@@ -1,8 +1,7 @@
 import logging
 import voluptuous as vol
 import requests
-import homeassistant.helpers.config_validation as cv
-from homeassistant import config_entries
+from homeassistant import config_entries, selector
 from homeassistant.core import callback
 from .const import *
 
@@ -14,7 +13,7 @@ def fetch_companies():
     Henter listen af selskaber fra brændstofpris-API'et.
 
     - Forsøger at hente data fra `API_URL`.
-    - Returnerer en sorteret liste af selskaber.
+    - Returnerer en **alfabetisk sorteret** liste af selskaber.
     - Hvis der opstår fejl, returneres en tom liste.
 
     Returns:
@@ -62,7 +61,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         Første trin i opsætningen: Vælg selskaber.
 
         - Henter listen af selskaber fra API'et.
-        - Viser en multi-select boks til valg af selskaber.
+        - Viser en **scrollbar multi-select** UI til valg af selskaber.
         - Hvis ingen selskaber kan hentes, stopper opsætningen.
 
         Args:
@@ -86,7 +85,13 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_abort(reason="cannot_connect")
 
         schema = vol.Schema({
-            vol.Required(CONF_COMPANIES): cv.multi_select(companies)  # Multi-select UI
+            vol.Required(CONF_COMPANIES): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=list(companies.keys()),  # Multi-select med alfabetisk sorteret liste
+                    multiple=True,
+                    mode=selector.SelectSelectorMode.LIST,  # Giver en liste med scrollbar
+                )
+            ),
         })
 
         return self.async_show_form(
@@ -118,7 +123,13 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             })
 
         schema = vol.Schema({
-            vol.Required(CONF_PRODUCTS): cv.multi_select(PRODUCTS)  # Multi-select UI
+            vol.Required(CONF_PRODUCTS): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=list(PRODUCTS.keys()),  # Multi-select med korrekt produktnavne
+                    multiple=True,
+                    mode=selector.SelectSelectorMode.LIST,
+                )
+            ),
         })
 
         return self.async_show_form(
@@ -161,8 +172,20 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
         companies = await self.hass.async_add_executor_job(fetch_companies)
 
         schema = vol.Schema({
-            vol.Optional(CONF_COMPANIES, default=self.config_entry.data.get(CONF_COMPANIES, [])): cv.multi_select(companies),
-            vol.Optional(CONF_PRODUCTS, default=self.config_entry.data.get(CONF_PRODUCTS, [])): cv.multi_select(PRODUCTS)
+            vol.Required(CONF_COMPANIES, default=self.config_entry.data.get(CONF_COMPANIES, [])): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=list(companies.keys()),
+                    multiple=True,
+                    mode=selector.SelectSelectorMode.LIST,
+                )
+            ),
+            vol.Required(CONF_PRODUCTS, default=self.config_entry.data.get(CONF_PRODUCTS, [])): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=list(PRODUCTS.keys()),
+                    multiple=True,
+                    mode=selector.SelectSelectorMode.LIST,
+                )
+            ),
         })
 
         return self.async_show_form(
