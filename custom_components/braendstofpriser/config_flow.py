@@ -27,7 +27,7 @@ def fetch_companies():
         response.raise_for_status()
 
         data = response.json()
-        companies = sorted(set(entry['selskab'] for entry in data.get('priser', [])))
+        companies = sorted(set(entry.get('selskab') for entry in data.get('priser', []) if entry.get('selskab')))
 
         if not companies:
             _LOGGER.warning("API returnerede ingen selskaber.")
@@ -54,7 +54,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
 
     def __init__(self):
-        self.companies = []  # Ændret fra {} til [] for at undgå fejl
+        self.companies = []  # Gemmer valgte selskaber
 
     async def async_step_user(self, user_input=None):
         """
@@ -74,7 +74,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             _LOGGER.debug("Brugeren har valgt selskaber: %s", user_input[CONF_COMPANIES])
-            self.companies = user_input[CONF_COMPANIES]  # Gem som en liste, ikke dictionary
+            self.companies = user_input[CONF_COMPANIES]
             return await self.async_step_products()
 
         # Hent selskaber i en synkron helper
@@ -85,7 +85,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_abort(reason="cannot_connect")
 
         schema = vol.Schema({
-            vol.Required(CONF_COMPANIES): selector.SelectSelector(
+            vol.Required(CONF_COMPANIES, default=[]): selector.SelectSelector(
                 selector.SelectSelectorConfig(
                     options=list(companies.keys()),  # Multi-select med alfabetisk sorteret liste
                     multiple=True,
@@ -123,9 +123,9 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             })
 
         schema = vol.Schema({
-            vol.Required(CONF_PRODUCTS): selector.SelectSelector(
+            vol.Required(CONF_PRODUCTS, default=[]): selector.SelectSelector(
                 selector.SelectSelectorConfig(
-                    options=list(PRODUCTS.keys()),  # Viser korrekte produktnavne
+                    options=PRODUCT_NAME_MAP,  # Viser korrekte produktnavne
                     multiple=True,
                     mode=selector.SelectSelectorMode.LIST,
                 )
@@ -174,14 +174,14 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
         schema = vol.Schema({
             vol.Required(CONF_COMPANIES, default=self.config_entry.data.get(CONF_COMPANIES, [])): selector.SelectSelector(
                 selector.SelectSelectorConfig(
-                    options=list(companies.keys()) if companies else [],  # Undgår fejl, hvis API’et returnerer tom liste
+                    options=list(companies.keys()) if companies else [],
                     multiple=True,
                     mode=selector.SelectSelectorMode.LIST,
                 )
             ),
             vol.Required(CONF_PRODUCTS, default=self.config_entry.data.get(CONF_PRODUCTS, [])): selector.SelectSelector(
                 selector.SelectSelectorConfig(
-                    options=list(PRODUCTS.keys()),  # Viser korrekte produktnavne
+                    options=PRODUCT_NAME_MAP,
                     multiple=True,
                     mode=selector.SelectSelectorMode.LIST,
                 )
