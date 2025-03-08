@@ -28,10 +28,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
             for product in products:
                 price = entry_data.get(product)
                 if price and price.strip():  # Opret kun sensor, hvis der er en faktisk pris
-                    _LOGGER.debug("Opretter sensor for %s - %s", company, PRODUCTS.get(product, product))
-                    entities.append(FuelPriceSensor(coordinator, entry.entry_id, company, product))
-                else:
-                    _LOGGER.debug("Springer oprettelse af sensor over for %s - %s, da ingen pris er angivet.", company, PRODUCTS.get(product, product))
+                    try:
+                        float(price)  # Sikrer at prisen er numerisk
+                        _LOGGER.debug("Opretter sensor for %s - %s", company, PRODUCTS.get(product, product))
+                        entities.append(FuelPriceSensor(coordinator, entry.entry_id, company, product))
+                    except ValueError:
+                        _LOGGER.warning("Springer oprettelse af sensor for %s - %s, da prisen ikke er gyldig: %s", company, PRODUCTS.get(product, product), price)
 
     async_add_entities(entities)
     _LOGGER.info("Brændstofpriser sensorer oprettet for entry: %s", entry.entry_id)
