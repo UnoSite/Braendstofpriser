@@ -1,6 +1,7 @@
 import logging
 import voluptuous as vol
 import requests
+import homeassistant.helpers.config_validation as cv
 from homeassistant import config_entries
 from homeassistant.core import callback
 from .const import *
@@ -17,7 +18,7 @@ def fetch_companies():
     - Hvis der opstår fejl, returneres en tom liste.
 
     Returns:
-        list: Liste med selskaber eller en tom liste ved fejl.
+        dict: Dictionary med selskaber til multi-select UI.
     """
     _LOGGER.info("Henter liste over selskaber fra API: %s", API_URL)
 
@@ -33,19 +34,20 @@ def fetch_companies():
         else:
             _LOGGER.debug("Modtaget %d selskaber fra API.", len(companies))
 
-        return companies
+        # Returnér dictionary for UI (Home Assistant multi-select kræver en dict)
+        return {company: company for company in companies}
 
     except requests.Timeout:
         _LOGGER.error("Timeout ved forsøg på at hente selskaber fra API.")
-        return []
+        return {}
 
     except requests.RequestException as err:
         _LOGGER.error("Netværksfejl ved hentning af selskaber: %s", err)
-        return []
+        return {}
 
     except ValueError as err:
         _LOGGER.error("Fejl ved parsing af JSON fra API: %s", err)
-        return []
+        return {}
 
 class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Håndterer opsætningen af Brændstofpriser integrationen."""
@@ -53,7 +55,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
 
     def __init__(self):
-        self.companies = []
+        self.companies = {}
 
     async def async_step_user(self, user_input=None):
         """
@@ -84,7 +86,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_abort(reason="cannot_connect")
 
         schema = vol.Schema({
-            vol.Required(CONF_COMPANIES): vol.All(vol.Length(min=1), vol.In(companies))  # Multi-select virker nu
+            vol.Required(CONF_COMPANIES): cv.multi_select(companies)  # Multi-select UI
         })
 
         return self.async_show_form(
@@ -116,7 +118,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             })
 
         schema = vol.Schema({
-            vol.Required(CONF_PRODUCTS): vol.All(vol.Length(min=1), [vol.In(PRODUCTS.keys())])  # Multi-select virker nu
+            vol.Required(CONF_PRODUCTS): cv.multi_select(PRODUCTS)  # Multi-select UI
         })
 
         return self.async_show_form(
@@ -156,9 +158,11 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
             _LOGGER.debug("Brugeren har opdateret indstillinger: %s", user_input)
             return self.async_create_entry(title="", data=user_input)
 
+        companies = await self.hass.async_add_executor_job(fetch_companies)
+
         schema = vol.Schema({
-            vol.Optional(CONF_COMPANIES, default=self.config_entry.data.get(CONF_COMPANIES, [])): vol.All(vol.Length(min=1), [vol.In(fetch_companies())]),
-            vol.Optional(CONF_PRODUCTS, default=self.config_entry.data.get(CONF_PRODUCTS, [])): vol.All(vol.Length(min=1), [vol.In(PRODUCTS.keys())])
+            vol.Optional(CONF_COMPANIES, default=self.config_entry.data.get(CONF_COMPANIES, [])): cv.multi_select(companies),
+            vol.Optional(CONF_PRODUCTS, default=self.config_entry.data.get(CONF_PRODUCTS, [])): cv.multi_select(PRODUCTS)
         })
 
         return self.async_show_form(
