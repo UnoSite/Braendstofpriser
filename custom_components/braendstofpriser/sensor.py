@@ -12,7 +12,21 @@ from .api import *
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities):
-    """Opsætter sensorer baseret på brugerens valg i config flow."""
+    """
+    Opsætter sensorer baseret på brugerens valg i config flow.
+
+    - Henter valgte selskaber og produkter fra entry.
+    - Opretter en DataUpdateCoordinator til håndtering af API-kald.
+    - Tilføjer sensorer til Home Assistant.
+
+    Args:
+        hass (HomeAssistant): Home Assistant instansen.
+        entry (ConfigEntry): Den konfigurationsindgang, der blev oprettet af brugeren.
+        async_add_entities (Callable): Funktion til at tilføje entiteter.
+
+    Returns:
+        None
+    """
     _LOGGER.info("Opsætter brændstofpriser sensorer for entry: %s", entry.entry_id)
 
     data = hass.data[DOMAIN][entry.entry_id].data
@@ -25,7 +39,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     entities = []
     for company in companies:
         for product in products:
-            _LOGGER.debug("Opretter sensor for %s - %s", company, PRODUCTS.get(product, product))
+            product_name = PRODUCTS.get(product, product)
+            _LOGGER.debug("Opretter sensor for %s - %s", company, product_name)
             entities.append(FuelPriceSensor(coordinator, entry.entry_id, company, product))
 
     async_add_entities(entities)
@@ -33,8 +48,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
 class FuelPriceCoordinator(DataUpdateCoordinator):
     """Håndterer API-kald og opdatering af sensorer."""
+
     def __init__(self, hass: HomeAssistant):
-        """Initialiserer DataUpdateCoordinator."""
+        """
+        Initialiserer DataUpdateCoordinator.
+
+        - Angiver update-interval til 1 time.
+        - Logger opdateringer for at spore API-forbindelse.
+
+        Args:
+            hass (HomeAssistant): Home Assistant instansen.
+        """
         super().__init__(
             hass,
             logger=_LOGGER,
@@ -43,23 +67,50 @@ class FuelPriceCoordinator(DataUpdateCoordinator):
         )
 
     async def _async_update_data(self):
-        """Henter data fra API og håndterer fejl."""
+        """
+        Henter data fra API og håndterer fejl.
+
+        - Logger forsøg på at hente data.
+        - Markerer sensorer som "unavailable", hvis data ikke kan hentes.
+
+        Returns:
+            list: Brændstofprisdata fra API.
+
+        Raises:
+            UpdateFailed: Hvis API-fejl opstår.
+        """
         _LOGGER.info("Henter nye brændstofpriser fra API...")
         try:
             data = await self.hass.async_add_executor_job(fetch_fuel_data)
+
             if not data:
                 _LOGGER.warning("Ingen data modtaget fra API!")
                 raise UpdateFailed("No data received from fuel price API")
+
             _LOGGER.debug("Modtaget %d priser fra API.", len(data))
             return data
+
         except Exception as err:
             _LOGGER.error("Fejl ved hentning af brændstofpriser: %s", err)
             raise UpdateFailed(f"Error fetching data: {err}") from err
 
 class FuelPriceSensor(CoordinatorEntity, SensorEntity):
     """Sensor, der repræsenterer prisen på et produkt fra et selskab."""
+
     def __init__(self, coordinator, entry_id, company, product):
-        """Initialiserer en sensor for et specifikt produkt og selskab."""
+        """
+        Initialiserer en sensor for et specifikt produkt og selskab.
+
+        - Opretter unik ID for enheden.
+        - Knytter sensoren til den tilhørende device (selskab).
+        - Definerer navn og metadata.
+
+        Args:
+            coordinator (FuelPriceCoordinator): Data koordinatoren.
+            entry_id (str): ID for config entry.
+            company (str): Navnet på selskabet.
+            product (str): Koden for produktet.
+        """
         super().__init__(coordinator)
         self._entry_id = entry_id
         self._company = company
@@ -77,30 +128,55 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def native_value(self):
-        """Returnerer den aktuelle pris."""
+        """
+        Returnerer den aktuelle pris.
+
+        - Søger i de hentede API-data efter matchende selskab og produkt.
+        - Konverterer værdien til float for bedre statistik-håndtering.
+
+        Returns:
+            float | None: Den aktuelle pris, eller None hvis ingen data findes.
+        """
         for entry in self.coordinator.data:
             selskab = entry.get("selskab")
-            pris = entry.get(self._product)
+            pris = entry.get(self._product)  # Hent pris ved at bruge produktnøglen direkte fra API
 
-            if selskab == self._company and pris and pris != "\u200b":
+            # Tjek om de nødvendige nøgler findes
+            if selskab is None or pris is None:
+                _LOGGER.warning("Ugyldig API-data modtaget: %s", entry)
+                continue  # Spring dette entry over
+
+            if selskab == self._company:
                 try:
-                    return float(pris)
+                    price_value = float(pris) if pris.strip() else None  # Håndterer tomme værdier
+                    _LOGGER.debug("Opdateret pris for %s: %s kr.", self._attr_name, price_value)
+                    return price_value
                 except (TypeError, ValueError):
                     _LOGGER.error("Ugyldig pris-data modtaget: %s", pris)
-                    return None
-        
+                    return None  # Returner None ved fejl
+
         _LOGGER.warning("Ingen pris fundet for %s", self._attr_name)
         return None
 
     @property
     def native_unit_of_measurement(self):
-        """Returnerer enheden for målingen."""
+        """
+        Returnerer enheden for målingen.
+
+        Returns:
+            str: "kr."
+        """
         return "kr."
 
     @property
     def extra_state_attributes(self):
-        """Returnerer ekstra attributter til sensoren."""
+        """
+        Returnerer ekstra attributter til sensoren.
+
+        Returns:
+            dict: Yderligere information om selskab og produkt.
+        """
         return {
             "selskab": self._company,
-            "produkt": PRODUCTS.get(self._product, self._product)
+            "produkt": PRODUCTS.get(self._product, self._product)  # Brug læseligt navn
         }
