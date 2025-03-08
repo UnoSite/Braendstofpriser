@@ -3,7 +3,7 @@ import voluptuous as vol
 import requests
 from homeassistant import config_entries
 from homeassistant.core import callback
-from homeassistant.helpers import selector  # Rettet import her
+from homeassistant.helpers import selector
 from .const import *
 
 # Opret logger til integrationen
@@ -34,8 +34,7 @@ def fetch_companies():
         else:
             _LOGGER.debug("Modtaget %d selskaber fra API.", len(companies))
 
-        # Returnér dictionary for UI (Home Assistant multi-select kræver en dict)
-        return {company: company for company in companies}
+        return {company: company for company in companies}  # Returner en dictionary
 
     except requests.Timeout:
         _LOGGER.error("Timeout ved forsøg på at hente selskaber fra API.")
@@ -55,7 +54,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
 
     def __init__(self):
-        self.companies = {}
+        self.companies = []  # Ændret fra {} til [] for at undgå fejl
 
     async def async_step_user(self, user_input=None):
         """
@@ -75,7 +74,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             _LOGGER.debug("Brugeren har valgt selskaber: %s", user_input[CONF_COMPANIES])
-            self.companies = user_input[CONF_COMPANIES]
+            self.companies = user_input[CONF_COMPANIES]  # Gem som en liste, ikke dictionary
             return await self.async_step_products()
 
         # Hent selskaber i en synkron helper
@@ -90,7 +89,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 selector.SelectSelectorConfig(
                     options=list(companies.keys()),  # Multi-select med alfabetisk sorteret liste
                     multiple=True,
-                    mode=selector.SelectSelectorMode.LIST,  # Giver en liste med scrollbar
+                    mode=selector.SelectSelectorMode.LIST,
                 )
             ),
         })
@@ -126,7 +125,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         schema = vol.Schema({
             vol.Required(CONF_PRODUCTS): selector.SelectSelector(
                 selector.SelectSelectorConfig(
-                    options={v: k for k, v in PRODUCTS.items()},  # Viser læselige navne i UI
+                    options={k: v for k, v in PRODUCTS.items()},  # Nu vises de læselige navne korrekt
                     multiple=True,
                     mode=selector.SelectSelectorMode.LIST,
                 )
@@ -182,7 +181,7 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
             ),
             vol.Required(CONF_PRODUCTS, default=self.config_entry.data.get(CONF_PRODUCTS, [])): selector.SelectSelector(
                 selector.SelectSelectorConfig(
-                    options={v: k for k, v in PRODUCTS.items()},  # Viser læselige navne i UI
+                    options={k: v for k, v in PRODUCTS.items()},  # Nu vises de læselige navne korrekt
                     multiple=True,
                     mode=selector.SelectSelectorMode.LIST,
                 )
