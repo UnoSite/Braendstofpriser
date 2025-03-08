@@ -31,7 +31,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # Forward entry setup til sensor platform
     _LOGGER.debug("Sender opsætning videre til sensor platform")
-    await hass.config_entries.async_forward_entry_setup(entry, "sensor")
+    await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
 
     _LOGGER.info("Brændstofpriser integration opsat for entry: %s", entry.entry_id)
     return True
