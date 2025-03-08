@@ -1,12 +1,26 @@
 {
   "seneste_ændring": {
-    "dato": "2025-03-07",
+    "dato": "2025-03-08",
     "ændring": {
       "benzin": "N/A",
       "diesel": "N/A"
     }
   },
   "priser": [
+    {
+      "selskab": "Uno-X",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "13.59",
+      "blyfri_95_plus_e10": "14.59",
+      "blyfri_plus_e5": "15.49",
+      "diesel_b7": "13.19",
+      "diesel_plus": "​",
+      "hvo_xtl": "18.79",
+      "el_normal": "​",
+      "el_hurtig": "​",
+      "el_lyn": "​",
+      "sidst_opdateret": "08-03-2025 01:00"
+    },
     {
       "selskab": "Circle K",
       "blyfri_92": "​",
@@ -75,20 +89,6 @@
       "el_normal": "​",
       "el_hurtig": "​",
       "el_lyn": "3.75",
-      "sidst_opdateret": "08-03-2025 00:00"
-    },
-    {
-      "selskab": "Uno-X",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "13.69",
-      "blyfri_95_plus_e10": "14.69",
-      "blyfri_plus_e5": "15.59",
-      "diesel_b7": "13.29",
-      "diesel_plus": "​",
-      "hvo_xtl": "18.89",
-      "el_normal": "​",
-      "el_hurtig": "​",
-      "el_lyn": "​",
       "sidst_opdateret": "08-03-2025 00:00"
     },
     {
