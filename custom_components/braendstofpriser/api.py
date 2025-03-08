@@ -17,7 +17,7 @@ def fetch_fuel_data():
         list: Liste af brændstofpriser eller en tom liste ved fejl.
     
     Raises:
-        RuntimeError: Hvis der opstår en netværksfejl eller JSON-fejl.
+        RuntimeError: Hvis der opstår en netværksfejl, JSON-fejl eller ugyldigt svar.
     """
     _LOGGER.info("Henter brændstofpriser fra API: %s", API_URL)
 
@@ -26,7 +26,14 @@ def fetch_fuel_data():
         response.raise_for_status()
 
         data = response.json()
+        if not isinstance(data, dict):  # Sikrer at svaret er et dictionary
+            _LOGGER.error("API returnerede et ugyldigt JSON-format: %s", data)
+            raise RuntimeError("API returnerede et ugyldigt JSON-format")
+
         fuel_prices = data.get('priser', [])
+        if not isinstance(fuel_prices, list):  # Sikrer at 'priser' er en liste
+            _LOGGER.error("API returnerede en ugyldig 'priser'-struktur: %s", fuel_prices)
+            raise RuntimeError("API returnerede en ugyldig 'priser'-struktur")
 
         if not fuel_prices:
             _LOGGER.warning("API returnerede ingen priser.")
