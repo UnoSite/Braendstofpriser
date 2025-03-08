@@ -138,10 +138,14 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(config_entry):
         """Returnerer options flow handleren, så brugeren kan ændre indstillinger senere."""
-        return BraendstofpriserOptionsFlowHandler()
+        return BraendstofpriserOptionsFlowHandler(config_entry)
 
 class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
     """Håndterer ændringer af indstillinger efter opsætning."""
+
+    def __init__(self, config_entry):
+        """Gemmer en reference til den aktuelle konfigurationsindgang."""
+        self.config_entry = config_entry
 
     async def async_step_init(self, user_input=None):
         """
@@ -158,11 +162,6 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
         """
         _LOGGER.info("Bruger åbner options flow for Brændstofpriser.")
 
-        entry = self.hass.config_entries.async_get_entry(self.context["entry_id"])
-        if not entry:
-            _LOGGER.error("Kunne ikke finde konfigurationsindgangen.")
-            return self.async_abort(reason="unknown_entry")
-
         if user_input is not None:
             _LOGGER.debug("Brugeren har opdateret indstillinger: %s", user_input)
             return self.async_create_entry(title="", data={
@@ -173,14 +172,14 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
         companies = await self.hass.async_add_executor_job(fetch_companies)
 
         schema = vol.Schema({
-            vol.Required(CONF_COMPANIES, default=entry.data.get(CONF_COMPANIES, [])): selector.SelectSelector(
+            vol.Required(CONF_COMPANIES, default=self.config_entry.data.get(CONF_COMPANIES, [])): selector.SelectSelector(
                 selector.SelectSelectorConfig(
                     options=list(companies.keys()) if companies else [],
                     multiple=True,
                     mode=selector.SelectSelectorMode.LIST,
                 )
             ),
-            vol.Required(CONF_PRODUCTS, default=[PRODUCTS[p] for p in entry.data.get(CONF_PRODUCTS, [])]): selector.SelectSelector(
+            vol.Required(CONF_PRODUCTS, default=[PRODUCTS[p] for p in self.config_entry.data.get(CONF_PRODUCTS, [])]): selector.SelectSelector(
                 selector.SelectSelectorConfig(
                     options=list(PRODUCT_NAME_MAP.keys()),
                     multiple=True,
