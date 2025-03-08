@@ -30,12 +30,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
         if company in selected_companies:
             for product in selected_products:
                 price = entry_data.get(product)
-                if price and price.strip():  # Opret kun sensor, hvis der er en faktisk pris
-                    unique_id = f"{entry.entry_id}_{company}_{product}"
-                    existing_entity_ids.add(unique_id)
-                    entities.append(FuelPriceSensor(coordinator, entry.entry_id, company, product))
+
+                # **Sikrer at sensor KUN oprettes, hvis der er en gyldig pris**
+                if price and price.strip():
+                    try:
+                        price_value = float(price)
+                        unique_id = f"{entry.entry_id}_{company}_{product}"
+                        existing_entity_ids.add(unique_id)
+                        entities.append(FuelPriceSensor(coordinator, entry.entry_id, company, product))
+                        _LOGGER.debug("Oprettet sensor: %s - %s med pris %s", company, PRODUCTS.get(product, product), price_value)
+                    except (TypeError, ValueError):
+                        _LOGGER.warning("Ugyldig pris-data for %s - %s: %s. Sensor oprettes ikke.", company, product, price)
                 else:
-                    _LOGGER.debug("Springer sensor over for %s - %s, da ingen pris er angivet.", company, PRODUCTS.get(product, product))
+                    _LOGGER.info("Ingen pris angivet for %s - %s. Sensor oprettes ikke.", company, PRODUCTS.get(product, product))
 
     async_add_entities(entities)
 
