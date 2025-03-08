@@ -4,6 +4,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, CoordinatorEntity, UpdateFailed
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
 from homeassistant.helpers.entity import DeviceInfo
 from .const import *
 from .api import *
@@ -15,27 +16,36 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     _LOGGER.info("Opsætter brændstofpriser sensorer for entry: %s", entry.entry_id)
 
     data = hass.data[DOMAIN][entry.entry_id].data
-    companies = data[CONF_COMPANIES]
-    products = data[CONF_PRODUCTS]
+    selected_companies = data[CONF_COMPANIES]
+    selected_products = data[CONF_PRODUCTS]
 
     coordinator = FuelPriceCoordinator(hass)
     await coordinator.async_config_entry_first_refresh()
 
     entities = []
+    existing_entity_ids = set()
+
     for entry_data in coordinator.data:
         company = entry_data.get("selskab")
-        if company in companies:
-            for product in products:
+        if company in selected_companies:
+            for product in selected_products:
                 price = entry_data.get(product)
                 if price and price.strip():  # Opret kun sensor, hvis der er en faktisk pris
-                    try:
-                        float(price)  # Sikrer at prisen er numerisk
-                        _LOGGER.debug("Opretter sensor for %s - %s", company, PRODUCTS.get(product, product))
-                        entities.append(FuelPriceSensor(coordinator, entry.entry_id, company, product))
-                    except ValueError:
-                        _LOGGER.warning("Springer oprettelse af sensor for %s - %s, da prisen ikke er gyldig: %s", company, PRODUCTS.get(product, product), price)
+                    unique_id = f"{entry.entry_id}_{company}_{product}"
+                    existing_entity_ids.add(unique_id)
+                    entities.append(FuelPriceSensor(coordinator, entry.entry_id, company, product))
+                else:
+                    _LOGGER.debug("Springer sensor over for %s - %s, da ingen pris er angivet.", company, PRODUCTS.get(product, product))
 
     async_add_entities(entities)
+
+    # **🔹 Fjern gamle sensorer, der ikke længere er valgt**
+    entity_registry = async_get_entity_registry(hass)
+    for entity_id, entity in list(entity_registry.entities.items()):
+        if entity.unique_id.startswith(entry.entry_id) and entity.unique_id not in existing_entity_ids:
+            _LOGGER.info("Fjerner forældet sensor: %s", entity_id)
+            entity_registry.async_remove(entity_id)
+
     _LOGGER.info("Brændstofpriser sensorer oprettet for entry: %s", entry.entry_id)
 
 class FuelPriceCoordinator(DataUpdateCoordinator):
