@@ -5,6 +5,7 @@ from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.helpers import selector
 from .const import *
+from .sensor import remove_unused_entities_and_devices
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -133,6 +134,9 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
                 CONF_COMPANIES: self.config_entry.data[CONF_COMPANIES],
                 CONF_PRODUCTS: [PRODUCT_NAME_MAP[name] for name in user_input[CONF_PRODUCTS]]
             })
+
+            # **🔹 Oprydning af gamle sensorer og enheder**
+            await remove_unused_entities_and_devices(self.hass, self.config_entry)
 
             # Genindlæs integrationen for at anvende ændringer
             await self.hass.config_entries.async_reload(self.config_entry.entry_id)
