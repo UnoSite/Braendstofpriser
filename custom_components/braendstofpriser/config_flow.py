@@ -84,7 +84,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_abort(reason="cannot_connect")
 
         schema = vol.Schema({
-            vol.Required(CONF_COMPANIES): vol.All(vol.Length(min=1), vol.In(companies))
+            vol.Required(CONF_COMPANIES): vol.All(vol.Length(min=1), vol.In(companies))  # Multi-select virker nu
         })
 
         return self.async_show_form(
@@ -116,7 +116,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             })
 
         schema = vol.Schema({
-            vol.Required(CONF_PRODUCTS): vol.All(vol.Length(min=1), vol.In(PRODUCTS.keys()))
+            vol.Required(CONF_PRODUCTS): vol.All(vol.Length(min=1), [vol.In(PRODUCTS.keys())])  # Multi-select virker nu
         })
 
         return self.async_show_form(
@@ -157,8 +157,8 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
             return self.async_create_entry(title="", data=user_input)
 
         schema = vol.Schema({
-            vol.Optional(CONF_COMPANIES, default=self.config_entry.data.get(CONF_COMPANIES, [])): vol.All(vol.Length(min=1), vol.In(fetch_companies())),
-            vol.Optional(CONF_PRODUCTS, default=self.config_entry.data.get(CONF_PRODUCTS, [])): vol.All(vol.Length(min=1), vol.In(PRODUCTS.keys()))
+            vol.Optional(CONF_COMPANIES, default=self.config_entry.data.get(CONF_COMPANIES, [])): vol.All(vol.Length(min=1), [vol.In(fetch_companies())]),
+            vol.Optional(CONF_PRODUCTS, default=self.config_entry.data.get(CONF_PRODUCTS, [])): vol.All(vol.Length(min=1), [vol.In(PRODUCTS.keys())])
         })
 
         return self.async_show_form(
