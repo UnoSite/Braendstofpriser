@@ -1,8 +1,9 @@
 import logging
 import voluptuous as vol
 import requests
-from homeassistant import config_entries, selector
+from homeassistant import config_entries
 from homeassistant.core import callback
+from homeassistant.helpers import selector  # Rettet import her
 from .const import *
 
 # Opret logger til integrationen
@@ -192,4 +193,4 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
             step_id="init",
             data_schema=schema,
             description_placeholders={"text": "Opdater dine valgte selskaber og produkter"}
-        )
+    )
