@@ -31,7 +31,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
                     _LOGGER.debug("Opretter sensor for %s - %s", company, PRODUCTS.get(product, product))
                     entities.append(FuelPriceSensor(coordinator, entry.entry_id, company, product))
                 else:
-                    _LOGGER.info("Springer oprettelse af sensor over for %s - %s, da ingen pris er angivet.", company, PRODUCTS.get(product, product))
+                    _LOGGER.debug("Springer oprettelse af sensor over for %s - %s, da ingen pris er angivet.", company, PRODUCTS.get(product, product))
 
     async_add_entities(entities)
     _LOGGER.info("Brændstofpriser sensorer oprettet for entry: %s", entry.entry_id)
@@ -91,12 +91,15 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
         for entry in self.coordinator.data:
             if entry.get("selskab") == self._company:
                 pris = entry.get(self._product)
-                if pris and pris.strip():
-                    try:
-                        return float(pris)
-                    except (TypeError, ValueError):
-                        _LOGGER.error("Ugyldig pris-data modtaget: %s", pris)
-                        return None
+                if not pris or not pris.strip():
+                    _LOGGER.debug("Ingen pris tilgængelig for %s - %s. Ignorerer sensor-opdatering.", self._company, self._product)
+                    return None  # Returnér None i stedet for at forsøge at konvertere
+
+                try:
+                    return float(pris)
+                except (TypeError, ValueError):
+                    _LOGGER.error("Kunne ikke konvertere pris til float for %s - %s: %s", self._company, self._product, pris)
+                    return None
 
         _LOGGER.debug("Ingen pris fundet for %s", self._attr_name)
         return None
