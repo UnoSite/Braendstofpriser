@@ -13,10 +13,6 @@ def fetch_companies():
     """
     Henter listen af selskaber fra brændstofpris-API'et.
 
-    - Forsøger at hente data fra `API_URL`.
-    - Returnerer en **alfabetisk sorteret** liste af selskaber.
-    - Hvis der opstår fejl, returneres en tom dictionary.
-
     Returns:
         dict: Dictionary med selskaber til multi-select UI.
     """
@@ -36,16 +32,8 @@ def fetch_companies():
 
         return {company: company for company in companies}
 
-    except requests.Timeout:
-        _LOGGER.error("Timeout ved forsøg på at hente selskaber fra API.")
-        return {}
-
-    except requests.RequestException as err:
-        _LOGGER.error("Netværksfejl ved hentning af selskaber: %s", err)
-        return {}
-
-    except ValueError as err:
-        _LOGGER.error("Fejl ved parsing af JSON fra API: %s", err)
+    except (requests.Timeout, requests.RequestException, ValueError) as err:
+        _LOGGER.error("Fejl ved hentning af selskaber: %s", err)
         return {}
 
 class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -54,19 +42,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
 
     async def async_step_user(self, user_input=None):
-        """
-        Første trin i opsætningen: Vælg selskaber.
-
-        - Henter listen af selskaber fra API'et.
-        - Viser en **scrollbar multi-select** UI til valg af selskaber.
-        - Hvis ingen selskaber kan hentes, stopper opsætningen.
-
-        Args:
-            user_input (dict, optional): Brugerens valg fra UI.
-
-        Returns:
-            FlowResult: Næste trin eller fejlmeddelelse.
-        """
+        """Trin 1: Vælg selskaber."""
         _LOGGER.info("Starter opsætning af Brændstofpriser: Trin 1 - Vælg selskaber")
 
         if user_input is not None:
@@ -90,25 +66,10 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             ),
         })
 
-        return self.async_show_form(
-            step_id="user",
-            data_schema=schema,
-            description_placeholders={"text": "Vælg de selskaber, du vil overvåge brændstofpriser fra"}
-        )
+        return self.async_show_form(step_id="user", data_schema=schema)
 
     async def async_step_products(self, user_input=None):
-        """
-        Andet trin i opsætningen: Vælg brændstofprodukter.
-
-        - Bruger kan vælge hvilke produkter der skal overvåges.
-        - Hvis brugeren trykker 'OK', oprettes integrationen.
-
-        Args:
-            user_input (dict, optional): Brugerens valg fra UI.
-
-        Returns:
-            FlowResult: Gemmer konfigurationen eller viser valgmuligheder.
-        """
+        """Trin 2: Vælg brændstofprodukter."""
         _LOGGER.info("Opsætning af Brændstofpriser: Trin 2 - Vælg produkter")
 
         if user_input is not None:
@@ -128,58 +89,70 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             ),
         })
 
-        return self.async_show_form(
-            step_id="products",
-            data_schema=schema,
-            description_placeholders={"text": "Vælg de brændstofprodukter, du vil overvåge priser for"}
-        )
+        return self.async_show_form(step_id="products", data_schema=schema)
 
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
-        """Returnerer options flow handleren, så brugeren kan ændre indstillinger senere."""
+        """Returnerer options flow handleren."""
         return BraendstofpriserOptionsFlowHandler(config_entry)
 
 class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
     """Håndterer ændringer af indstillinger efter opsætning."""
 
-    def __init__(self, config_entry):
-        """Gemmer en reference til den aktuelle konfigurationsindgang."""
-        self.config_entry = config_entry
+    async def async_step_select_companies(self, user_input=None):
+        """Trin 1: Opdater selskaber."""
+        _LOGGER.info("Reconfiguration: Trin 1 - Vælg selskaber")
 
-    async def async_step_init(self, user_input=None):
-        """
-        Viser en menu til at ændre valgte selskaber og produkter.
-
-        - Bruger kan ændre selskaber og produkter uden at slette integrationen.
-        - Hvis brugeren trykker 'OK', gemmes de nye indstillinger.
-
-        Args:
-            user_input (dict, optional): Brugerens valg fra UI.
-
-        Returns:
-            FlowResult: Gemmer ændringerne eller viser valgmuligheder.
-        """
-        _LOGGER.info("Bruger åbner options flow for Brændstofpriser.")
+        entry = self.hass.config_entries.async_get_entry(self.context["entry_id"])
+        if not entry:
+            _LOGGER.error("Kunne ikke finde konfigurationsindgangen.")
+            return self.async_abort(reason="unknown_entry")
 
         if user_input is not None:
-            _LOGGER.debug("Brugeren har opdateret indstillinger: %s", user_input)
-            return self.async_create_entry(title="", data={
+            _LOGGER.debug("Opdaterede selskaber: %s", user_input[CONF_COMPANIES])
+            self.hass.config_entries.async_update_entry(entry, data={
                 CONF_COMPANIES: user_input[CONF_COMPANIES],
-                CONF_PRODUCTS: [PRODUCT_NAME_MAP[name] for name in user_input[CONF_PRODUCTS]]
+                CONF_PRODUCTS: entry.data.get(CONF_PRODUCTS, [])
             })
+            return await self.async_step_select_products()
 
         companies = await self.hass.async_add_executor_job(fetch_companies)
 
         schema = vol.Schema({
-            vol.Required(CONF_COMPANIES, default=self.config_entry.data.get(CONF_COMPANIES, [])): selector.SelectSelector(
+            vol.Required(CONF_COMPANIES, default=entry.data.get(CONF_COMPANIES, [])): selector.SelectSelector(
                 selector.SelectSelectorConfig(
                     options=list(companies.keys()) if companies else [],
                     multiple=True,
                     mode=selector.SelectSelectorMode.LIST,
                 )
             ),
-            vol.Required(CONF_PRODUCTS, default=[PRODUCTS[p] for p in self.config_entry.data.get(CONF_PRODUCTS, [])]): selector.SelectSelector(
+        })
+
+        return self.async_show_form(step_id="select_companies", data_schema=schema)
+
+    async def async_step_select_products(self, user_input=None):
+        """Trin 2: Opdater brændstofprodukter."""
+        _LOGGER.info("Reconfiguration: Trin 2 - Vælg brændstofprodukter")
+
+        entry = self.hass.config_entries.async_get_entry(self.context["entry_id"])
+        if not entry:
+            _LOGGER.error("Kunne ikke finde konfigurationsindgangen.")
+            return self.async_abort(reason="unknown_entry")
+
+        if user_input is not None:
+            _LOGGER.debug("Opdaterede produkter: %s", user_input[CONF_PRODUCTS])
+            self.hass.config_entries.async_update_entry(entry, data={
+                CONF_COMPANIES: entry.data[CONF_COMPANIES],
+                CONF_PRODUCTS: [PRODUCT_NAME_MAP[name] for name in user_input[CONF_PRODUCTS]]
+            })
+
+            # Genindlæs integrationen, så ændringerne træder i kraft
+            await self.hass.config_entries.async_reload(entry.entry_id)
+            return self.async_create_entry(title="", data={})
+
+        schema = vol.Schema({
+            vol.Required(CONF_PRODUCTS, default=[PRODUCTS[p] for p in entry.data.get(CONF_PRODUCTS, [])]): selector.SelectSelector(
                 selector.SelectSelectorConfig(
                     options=list(PRODUCT_NAME_MAP.keys()),
                     multiple=True,
@@ -188,8 +161,4 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
             ),
         })
 
-        return self.async_show_form(
-            step_id="init",
-            data_schema=schema,
-            description_placeholders={"text": "Opdater dine valgte selskaber og produkter"}
-        )
+        return self.async_show_form(step_id="select_products", data_schema=schema)
