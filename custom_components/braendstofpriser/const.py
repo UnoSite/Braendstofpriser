@@ -10,17 +10,17 @@ Denne fil indeholder:
 - En liste af understøttede platforme.
 """
 
-# Domænenavn for integrationen
+# 🔹 Domænenavn for integrationen
 DOMAIN = "braendstofpriser"
 
-# Konfigurationsnøgler brugt i config_flow.py
+# 🔹 Konfigurationsnøgler brugt i config_flow.py
 CONF_COMPANIES = "companies"  # Valgte selskaber
 CONF_PRODUCTS = "products"  # Valgte brændstofprodukter
 
-# URL til API, der leverer brændstofpriser
+# 🔹 URL til API, der leverer brændstofpriser
 API_URL = "https://raw.githubusercontent.com/UnoSite/Braendstofpriser/refs/heads/main/data/listprices.json"
 
-# Dictionary over understøttede brændstofprodukter
+# 🔹 Dictionary over understøttede brændstofprodukter
 PRODUCTS = {
     "blyfri_92": "Benzin 92 (E5)",
     "blyfri_95_e10": "Benzin 95 (E10)",
@@ -34,8 +34,9 @@ PRODUCTS = {
     "el_lyn": "EL (Turbo)"
 }
 
-# Omvendt opslag for produktnavne → nøgler (bruges i config_flow og sensor)
+# 🔹 Omvendt opslag for produktnavne → nøgler (bruges i config_flow og sensor)
+#   - Gør det muligt at slå op fra læseligt navn til API-nøgle
 PRODUCT_NAME_MAP = {v: k for k, v in PRODUCTS.items()}
 
-# Understøttede platforme (bruges i __init__.py ved async_forward_entry_setups)
+# 🔹 Understøttede platforme (bruges i __init__.py ved async_forward_entry_setups)
 SUPPORTED_PLATFORMS = ["sensor"]
