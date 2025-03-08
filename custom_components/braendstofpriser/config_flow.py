@@ -126,7 +126,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         schema = vol.Schema({
             vol.Required(CONF_PRODUCTS): selector.SelectSelector(
                 selector.SelectSelectorConfig(
-                    options=list(PRODUCTS.keys()),  # Multi-select med korrekt produktnavne
+                    options={v: k for k, v in PRODUCTS.items()},  # Viser læselige navne i UI
                     multiple=True,
                     mode=selector.SelectSelectorMode.LIST,
                 )
@@ -182,7 +182,7 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
             ),
             vol.Required(CONF_PRODUCTS, default=self.config_entry.data.get(CONF_PRODUCTS, [])): selector.SelectSelector(
                 selector.SelectSelectorConfig(
-                    options=list(PRODUCTS.keys()),
+                    options={v: k for k, v in PRODUCTS.items()},  # Viser læselige navne i UI
                     multiple=True,
                     mode=selector.SelectSelectorMode.LIST,
                 )
@@ -193,4 +193,4 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
             step_id="init",
             data_schema=schema,
             description_placeholders={"text": "Opdater dine valgte selskaber og produkter"}
-    )
+            )
