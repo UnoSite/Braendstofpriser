@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import time
 
-URL = "$FUELPRICES"
+URL = '${{ env.FUELPRICES }}'
 OUTPUT_FILE = "data/listprices.json"
 
 def fetch_data():
