@@ -11,8 +11,8 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: Get branch name
-        #run: echo "Branch to delete: ${{ github.event.pull_request.head.ref }}"
+#      - name: Get branch name
+#        run: echo "Branch to delete: ${{ github.event.pull_request.head.ref }}"
 
       - name: Sleep for 30 seconds
         run: sleep 30s
