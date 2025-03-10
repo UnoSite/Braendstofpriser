@@ -28,17 +28,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
     for entry_data in coordinator.data:
         company = entry_data.get("selskab")
+        last_updated = entry_data.get("sidst_opdateret")
+
         if company in selected_companies:
             for product in selected_products:
                 price = entry_data.get(product)
 
-                # **Sikrer at sensor KUN oprettes, hvis der er en gyldig pris**
                 if price and price.strip():
                     try:
                         price_value = float(price)
                         unique_id = f"{entry.entry_id}_{company}_{product}"
                         existing_entity_ids.add(unique_id)
-                        entities.append(FuelPriceSensor(coordinator, entry.entry_id, company, product))
+                        entities.append(FuelPriceSensor(coordinator, entry.entry_id, company, product, last_updated))
                         _LOGGER.debug("Oprettet sensor: %s - %s med pris %s", company, PRODUCTS.get(product, product), price_value)
                     except (TypeError, ValueError):
                         _LOGGER.warning("Ugyldig pris-data for %s - %s: %s. Sensor oprettes ikke.", company, product, price)
@@ -47,7 +48,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
     async_add_entities(entities)
 
-    # **Fjern gamle sensorer og enheder, der ikke længere er relevante**
     await remove_unused_entities_and_devices(hass, entry, existing_entity_ids)
 
     _LOGGER.info("Brændstofpriser sensorer oprettet for entry: %s", entry.entry_id)
@@ -57,13 +57,11 @@ async def remove_unused_entities_and_devices(hass: HomeAssistant, entry: ConfigE
     entity_registry = async_get_entity_registry(hass)
     device_registry = async_get_device_registry(hass)
 
-    # **Fjern gamle sensorer, der ikke længere er i brug**
     for entity_id, entity in list(entity_registry.entities.items()):
         if entity.unique_id.startswith(entry.entry_id) and entity.unique_id not in active_entity_ids:
             _LOGGER.info("Fjerner forældet sensor: %s", entity_id)
             entity_registry.async_remove(entity_id)
 
-    # **Fjern enheder uden aktive sensorer**
     for device_id, device in list(device_registry.devices.items()):
         if entry.entry_id in device.config_entries:
             related_entities = [e for e in entity_registry.entities.values() if e.device_id == device.id]
@@ -103,12 +101,14 @@ class FuelPriceCoordinator(DataUpdateCoordinator):
 class FuelPriceSensor(CoordinatorEntity, SensorEntity):
     """Sensor, der repræsenterer prisen på et produkt fra et selskab."""
 
-    def __init__(self, coordinator, entry_id, company, product):
+    def __init__(self, coordinator, entry_id, company, product, last_updated):
         """Initialiserer en sensor for et specifikt produkt og selskab."""
         super().__init__(coordinator)
         self._entry_id = entry_id
         self._company = company
         self._product = product
+        self._last_updated = last_updated
+
         self._attr_unique_id = f"{entry_id}_{company}_{product}"
         self._attr_name = f"{company} {PRODUCTS.get(product, product)}"
         self._attr_device_info = DeviceInfo(
@@ -128,7 +128,7 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
                 pris = entry.get(self._product)
                 if not pris or not pris.strip():
                     _LOGGER.debug("Ingen pris tilgængelig for %s - %s. Ignorerer sensor-opdatering.", self._company, self._product)
-                    return None  # Returnér None i stedet for at forsøge at konvertere
+                    return None
 
                 try:
                     return float(pris)
@@ -149,5 +149,6 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
         """Returnerer ekstra attributter til sensoren."""
         return {
             "selskab": self._company,
-            "produkt": PRODUCTS.get(self._product, self._product)
-            }
+            "produkt": PRODUCTS.get(self._product, self._product),
+            "sidst_opdateret": self._last_updated
+                }
