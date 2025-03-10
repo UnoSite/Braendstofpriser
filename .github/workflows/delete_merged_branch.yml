@@ -13,19 +13,14 @@ jobs:
       - name: Get branch name
         run: echo "Branch to delete: ${{ github.event.pull_request.head.ref }}"
 
-      - name: Delete merged branch
-        run: |
-          BRANCH_NAME=${{ github.event.pull_request.head.ref }}
-          REPO=${{ github.repository }}
+      - name: delete-branch
+        uses: breningham/delete-branch@v1.0.0
+        with:
+          github_token: ${{ secrets.PAT_TOKEN }}
+          # The owner of the repository
+          repo_owner: ${{ github.repository_owner }}
+          # The name of the repository
+          repo_name: ${{ github.event.repository.name }}
+          # The name of the branch to delete
+          branch_name: ${{ github.event.pull_request.head.ref }}
           
-          # Beskyt hovedbrancher
-          if [[ "$BRANCH_NAME" == "main" ]]; then
-            echo "Protected branch ($BRANCH_NAME) - skipping deletion"
-            exit 0
-          fi
-          
-          echo "Deleting branch: $BRANCH_NAME from repo: $REPO"
-
-          curl -X DELETE -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
-               -H "Accept: application/vnd.github.v3+json" \
-               https://api.github.com/repos/$REPO/git/refs/heads/$BRANCH_NAME
