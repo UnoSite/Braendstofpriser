@@ -13,6 +13,10 @@ jobs:
       - name: Get branch name
         run: echo "Branch to delete: ${{ github.event.pull_request.head.ref }}"
 
+      - name: Sleep for 30 seconds
+        run: sleep 30s
+        shell: bash
+
       - name: delete-branch
         uses: breningham/delete-branch@v1.0.0
         with:
