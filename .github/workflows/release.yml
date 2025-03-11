@@ -24,7 +24,6 @@ jobs:
         run: |
           git config user.name UnoSite
           git config user.email 68971788+UnoSite@users.noreply.github.com
-          git config user.signingkey ${{ secrets.signingkey }}
           git add ./custom_components/braendstofpriser/manifest.json
           git commit -m "Updated manifest.json"
           git push origin HEAD:main
