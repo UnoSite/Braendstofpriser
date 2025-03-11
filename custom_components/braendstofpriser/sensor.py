@@ -156,6 +156,7 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
 
     def get_icon(self, product):
         """Returnerer et passende ikon baseret på brændstoftypen."""
-        if "el" in product.lower():
+        electric_products = {"el_normal", "el_hurtig", "el_lyn"}
+        if product in electric_products:
             return "mdi:ev-station"
         return "mdi:gas-station"
