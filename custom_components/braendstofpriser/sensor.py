@@ -111,6 +111,7 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
 
         self._attr_unique_id = f"{entry_id}_{company}_{product}"
         self._attr_name = f"{company} {PRODUCTS.get(product, product)}"
+        self._attr_icon = self.get_icon(product)  # Sætter ikon baseret på produktet
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{entry_id}_{company}")},
             name=f"{company} Brændstofpriser",
@@ -151,4 +152,10 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
             "selskab": self._company,
             "produkt": PRODUCTS.get(self._product, self._product),
             "sidst_opdateret": self._last_updated
-                }
+        }
+
+    def get_icon(self, product):
+        """Returnerer et passende ikon baseret på brændstoftypen."""
+        if "el" in product.lower():
+            return "mdi:ev-station"
+        return "mdi:gas-station"
