@@ -21,12 +21,14 @@ jobs:
         run: |
           python3 ${{ github.workspace }}/.github/scripts/update_hacs_manifest.py --version ${{ github.event.release.tag_name }} --path /custom_components/braendstofpriser/
       - name: Commit manifest update
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          git config user.name UnoSite
-          git config user.email 68971788+UnoSite@users.noreply.github.com
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
           git add ./custom_components/braendstofpriser/manifest.json
-          git commit -m "Updated manifest.json"
-          git push origin HEAD:main
+          git commit -m "Updated manifest.json" || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
       - name: Create zip
         run: |
           cd custom_components/braendstofpriser
