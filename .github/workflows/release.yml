@@ -1,47 +1,59 @@
-name: Release
-
-permissions: write-all
+name: Release Workflow
 
 on:
-  workflow_dispatch:
   release:
     types: [published]
 
-env:
-  COMPONENT_DIR: braendstofpriser
+permissions:
+  contents: write  # Påkrævet for at committe ændringer
 
 jobs:
-  release_zip_file:
-    name: Prepare release asset
+  release_process:
+    name: Handle Release
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+
+      ## Step 1: Hent versionsnummer fra tag
+      - name: Get Release Version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
+      ## Step 2: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
-      - name: Update manifest.json version to ${{ github.event.release.tag_name }}
+        with:
+          fetch-depth: 0
+
+      ## Step 3: Opdater manifest.json
+      - name: Update manifest.json
         run: |
-          python3 ${{ github.workspace }}/.github/scripts/update_hacs_manifest.py --version ${{ github.event.release.tag_name }} --path /custom_components/braendstofpriser/
-      - name: Commit manifest update
+          FILE="custom_components/braendstofpriser/manifest.json"
+          jq --arg v "$VERSION" '.version = $v' "$FILE" > temp.json && mv temp.json "$FILE"
+
+      ## Step 4: Commit ændringen direkte til main
+      - name: Commit and Push manifest.json update
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
+          git add custom_components/braendstofpriser/manifest.json
+          git commit -m "Update manifest.json to version $VERSION"
+          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
 
-          git checkout main
-          git pull --rebase origin main
-
-          git add ./custom_components/braendstofpriser/manifest.json
-          git commit -m "Updated manifest.json" || echo "No changes to commit"
-          git push origin main
-      - name: Create zip
+      ## Step 5: Zip indholdet af mappen
+      - name: Create zip file
         run: |
           cd custom_components/braendstofpriser
-          zip braendstofpriser.zip -r ./
-      - name: Upload zip to release
+          zip -r ../../braendstofpriser.zip ./
+          cd ../..
+
+      ## Step 6: Upload zip-filen til releasen
+      - name: Upload Zip to Release
         uses: svenstaro/upload-release-action@2.9.0
         with:
           repo_token: ${{ secrets.PAT_TOKEN }}
-          file: ./custom_components/braendstofpriser/braendstofpriser.zip
+          file: braendstofpriser.zip
           asset_name: braendstofpriser.zip
           tag: ${{ github.ref }}
           overwrite: true
