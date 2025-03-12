@@ -23,7 +23,7 @@ jobs:
       - name: Update manifest.json to ${{ github.event.release.tag_name }}
         uses: restackio/update-json-file-action@2.1
         with:
-          file: package.json
+          file: custom_components/braendstofpriser/manifest.json
           fields: "{'version': '${{ github.event.release.tag_name }}'}"
           
       - name: Create zip
