@@ -1,4 +1,4 @@
-name-template: 'Version $RESOLVED_VERSION'
+name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
 change-template: '- #$NUMBER: `$TITLE` by @$AUTHOR'
 sort-direction: ascending
