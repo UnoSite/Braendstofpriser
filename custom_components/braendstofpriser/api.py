@@ -7,25 +7,25 @@ _LOGGER = logging.getLogger(__name__)
 
 def fetch_fuel_data():
     """
-    Henter brændstofpriser fra det eksterne GitHub JSON API.
+    Henter braendstofpriser fra det eksterne GitHub JSON API.
 
-    - Forsøger at hente data fra `API_URL` med en timeout på 10 sekunder.
+    - Forsoeger at hente data fra `API_URL` med en timeout paa 10 sekunder.
     - Validerer API-svaret for at sikre, at det indeholder gyldige data.
     - Returnerer en tom liste, hvis ingen brugbare priser findes.
 
     Returns:
-        list: Liste af brændstofpriser eller en tom liste ved fejl.
+        list: Liste af braendstofpriser eller en tom liste ved fejl.
     
     Raises:
-        RuntimeError: Hvis der opstår en netværksfejl, JSON-fejl eller ugyldigt svar.
+        RuntimeError: Hvis der opstaar en netvaerksfejl, JSON-fejl eller ugyldigt svar.
     """
-    _LOGGER.info("Henter brændstofpriser fra API: %s", API_URL)
+    _LOGGER.info("Henter braendstofpriser fra API: %s", API_URL)
 
     try:
         response = requests.get(API_URL, timeout=10)
         response.raise_for_status()
 
-        # Prøv at parse JSON-data
+        # Proev at parse JSON-data
         try:
             data = response.json()
         except ValueError as err:
@@ -47,14 +47,14 @@ def fetch_fuel_data():
         if not fuel_prices:
             _LOGGER.warning("API returnerede ingen priser.")
         else:
-            _LOGGER.debug("Modtaget %d brændstofpriser fra API.", len(fuel_prices))
+            _LOGGER.debug("Modtaget %d braendstofpriser fra API.", len(fuel_prices))
 
         return fuel_prices
 
     except requests.Timeout:
-        _LOGGER.error("Timeout ved forsøg på at hente brændstofpriser fra API.")
-        raise RuntimeError("Timeout ved hentning af brændstofpriser fra API.")
+        _LOGGER.error("Timeout ved forsoeg paa at hente braendstofpriser fra API.")
+        raise RuntimeError("Timeout ved hentning af braendstofpriser fra API.")
 
     except requests.RequestException as err:
-        _LOGGER.error("Netværksfejl ved hentning af brændstofpriser: %s", err)
-        raise RuntimeError(f"Netværksfejl ved hentning af brændstofpriser: {err}")
+        _LOGGER.error("Netvaerksfejl ved hentning af braendstofpriser: %s", err)
+        raise RuntimeError(f"Netvaerksfejl ved hentning af braendstofpriser: {err}")

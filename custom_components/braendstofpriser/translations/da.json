@@ -2,17 +2,17 @@
     "config": {
         "step": {
             "user": {
-                "title": "Vælg selskaber",
-                "description": "Her skal du vælge hvilke selskaber du vil have priser fra",
+                "title": "Vaelg selskaber",
+                "description": "Her skal du vaelge hvilke selskaber du vil have priser fra",
                 "data": {
-                    "companies": "Vælg selskaber:"
+                    "companies": "Vaelg selskaber:"
                 }
             },
             "products": {
-                "title": "Vælg produkter",
-                "description": "Her skal du vælge hvilke produkter du vil have priser fra",
+                "title": "Vaelg produkter",
+                "description": "Her skal du vaelge hvilke produkter du vil have priser fra",
                 "data": {
-                    "products": "Vælg produkter:"
+                    "products": "Vaelg produkter:"
                 }
             }
         },

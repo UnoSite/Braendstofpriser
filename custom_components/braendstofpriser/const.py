@@ -1,26 +1,26 @@
 """
-Konstantfil for Brændstofpriser integrationen.
+Konstantfil for Braendstofpriser integrationen.
 
 Denne fil indeholder:
-- Domænenavn for integrationen.
-- Konfigurationsnøgler.
-- API URL til brændstofpris-data.
-- En liste over understøttede brændstofprodukter.
-- En omvendt map for produktopslag (fra navn til nøgle).
-- En liste af understøttede platforme.
+- Domaenenavn for integrationen.
+- Konfigurationsnoegler.
+- API URL til braendstofpris-data.
+- En liste over understoettede braendstofprodukter.
+- En omvendt map for produktopslag (fra navn til noegle).
+- En liste af understoettede platforme.
 """
 
-# 🔹 Domænenavn for integrationen
+# 🔹 Domaenenavn for integrationen
 DOMAIN = "braendstofpriser"
 
-# 🔹 Konfigurationsnøgler brugt i config_flow.py
+# 🔹 Konfigurationsnoegler brugt i config_flow.py
 CONF_COMPANIES = "companies"  # Valgte selskaber
-CONF_PRODUCTS = "products"  # Valgte brændstofprodukter
+CONF_PRODUCTS = "products"  # Valgte braendstofprodukter
 
-# 🔹 URL til API, der leverer brændstofpriser
+# 🔹 URL til API, der leverer braendstofpriser
 API_URL = "https://raw.githubusercontent.com/UnoSite/Braendstofpriser/refs/heads/main/data/listprices.json"
 
-# 🔹 Dictionary over understøttede brændstofprodukter
+# 🔹 Dictionary over understoettede braendstofprodukter
 PRODUCTS = {
     "blyfri_92": "Benzin 92 (E5)",
     "blyfri_95_e10": "Benzin 95 (E10)",
@@ -34,9 +34,9 @@ PRODUCTS = {
     "el_lyn": "EL (Turbo)"
 }
 
-# 🔹 Omvendt opslag for produktnavne → nøgler (bruges i config_flow og sensor)
-#   - Gør det muligt at slå op fra læseligt navn til API-nøgle
+# 🔹 Omvendt opslag for produktnavne → noegler (bruges i config_flow og sensor)
+#   - Goer det muligt at slaa op fra laeseligt navn til API-noegle
 PRODUCT_NAME_MAP = {v: k for k, v in PRODUCTS.items()}
 
-# 🔹 Understøttede platforme (bruges i __init__.py ved async_forward_entry_setups)
+# 🔹 Understoettede platforme (bruges i __init__.py ved async_forward_entry_setups)
 SUPPORTED_PLATFORMS = ["sensor"]
