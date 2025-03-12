@@ -12,11 +12,10 @@ jobs:
     steps:
       - name: Request a review
         uses: octokit/request-action@v2.x
-        with:
-          route: POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         with:
+          route: POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
           pull_number: ${{ github.event.pull_request.number }}
