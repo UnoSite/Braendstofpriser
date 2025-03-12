@@ -17,27 +17,27 @@ jobs:
     name: Prepare release asset
     runs-on: ubuntu-latest
     steps:
-      - name: Update version in manifest.json and push
-        uses: actions/checkout@v4
-  	    with:
-    	    token: ${{ secrets.PAT_TOKEN }}
+    - name: Update version in manifest.json and push
+      uses: actions/checkout@v4
+  	  with:
+    	  token: ${{ secrets.PAT_TOKEN }}
 
-      - name: Update version
-  	    run: |
-          jq --arg new_version "${{ github.event.release.tag_name }}" '.version = $new_version' custom_components/braendstofpriser/manifest.json > tmp.json && mv tmp.json custom_components/braendstofpriser/manifest.json
+    - name: Update version
+  	  run: |
+        jq --arg new_version "${{ github.event.release.tag_name }}" '.version = $new_version' custom_components/braendstofpriser/manifest.json > tmp.json && mv tmp.json custom_components/braendstofpriser/manifest.json
 
-      - name: Configure Git
-        run: |
-          git config --global user.name 'Price_Fetcher[bot]'
-          git config --global user.email 'Price_Fetcher[bot]@users.noreply.github.com'
+    - name: Configure Git
+      run: |
+        git config --global user.name 'Price_Fetcher[bot]'
+        git config --global user.email 'Price_Fetcher[bot]@users.noreply.github.com'
 
-      - name: Commit and push if changes exist
-        run: |
-          git add custom_components/braendstofpriser/manifest.json
-          if ! git diff --cached --quiet; then
-            git commit -m "Update version to ${{ github.event.release.tag_name }}"
-            git push
-          fi
+    - name: Commit and push if changes exist
+      run: |
+        git add custom_components/braendstofpriser/manifest.json
+        if ! git diff --cached --quiet; then
+          git commit -m "Update version to ${{ github.event.release.tag_name }}"
+          git push
+        fi
           
       - name: Create zip
         run: |
