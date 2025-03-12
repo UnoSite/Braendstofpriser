@@ -21,10 +21,11 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Update manifest.json to ${{ github.event.release.tag_name }}
-        uses: restackio/update-json-values-action@v1.2.0
+        uses: jossef/action-set-json-field@v2.2
         with:
           file: custom_components/braendstofpriser/manifest.json
-          fields: "{\"version\": \"${{ github.event.release.tag_name }}\"}"
+          field: version
+          value: ${{ github.event.release.tag_name }}
           
       - name: Create zip
         run: |
