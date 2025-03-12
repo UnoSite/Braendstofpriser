@@ -31,7 +31,7 @@ jobs:
       - name: Create zip
         run: |
           cd custom_components/braendstofpriser
-          zip isitpayday.zip -r ./
+          zip braendstofpriser.zip -r ./
       - name: Upload zip to release
         uses: svenstaro/upload-release-action@2.9.0
         with:
