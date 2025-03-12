@@ -20,12 +20,17 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
         
-      - name: Update manifest.json to ${{ github.event.release.tag_name }}
-        uses: jossef/action-set-json-field@v2.2
-        with:
-          file: custom_components/braendstofpriser/manifest.json
-          field: version
-          value: ${{ github.event.release.tag_name }}
+      - name: Update version in manifest.json and push
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          jq --arg new_version "${{ github.event.release.tag_name }}" '.version = $new_version' custom_components/braendstofpriser/manifest.json > tmp.json && mv tmp.json custom_components/braendstofpriser/manifest.json
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git
+          git add custom_components/braendstofpriser/manifest.json
+          git commit -m "Update version to ${{ github.event.release.tag_name }}"
+          git push origin HEAD:main
           
       - name: Create zip
         run: |
