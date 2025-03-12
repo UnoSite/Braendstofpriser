@@ -17,9 +17,6 @@ jobs:
     name: Prepare release asset
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        
       - name: Update version in manifest.json and push
         uses: actions/checkout@v4
   			with:
