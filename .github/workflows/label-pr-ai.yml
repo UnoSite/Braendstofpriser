@@ -41,22 +41,26 @@ jobs:
       - name: Call OpenAI API for Label Prediction
         id: openai_request
         run: |
-          # Byg JSON payload korrekt med printf for at sikre gyldigt format
-          PAYLOAD=$(printf '{
-            "model": "gpt-4-turbo",
-            "messages": [
-              {
-                "role": "system",
-                "content": "You are a GitHub automation bot. Based on the given pull request title and description, return a JSON array with the most relevant labels from the available labels. Only return labels that exist in the provided list."
-              },
-              {
-                "role": "user",
-                "content": "Pull Request Title: %s\nPull Request Description: %s\nAvailable Labels: %s\n\nReturn a JSON array of the most relevant labels."
-              }
-            ],
-            "temperature": 0.3,
-            "max_tokens": 50
-          }' "$PR_TITLE" "$PR_BODY_SHORT" "$AVAILABLE_LABELS")
+          # Byg JSON payload korrekt med jq for at sikre gyldigt format
+          PAYLOAD=$(jq -n \
+              --arg pr_title "$PR_TITLE" \
+              --arg pr_body_short "$PR_BODY_SHORT" \
+              --arg available_labels "$AVAILABLE_LABELS" \
+              '{
+                  model: "gpt-4-turbo",
+                  messages: [
+                      {
+                          role: "system",
+                          content: "You are a GitHub automation bot. Based on the given pull request title and description, return a JSON array with the most relevant labels from the available labels. Only return the JSON array."
+                      },
+                      {
+                          role: "user",
+                          content: ("Pull Request Title: \($pr_title)\nPull Request Description: \($pr_body_short)\nAvailable Labels: \($available_labels)\n\nReturn a JSON array of the most relevant labels.")
+                      }
+                  ],
+                  temperature: 0.3,
+                  max_tokens: 50
+              }')
 
           echo "Sending the following JSON payload to OpenAI API:"
           echo "$PAYLOAD"
