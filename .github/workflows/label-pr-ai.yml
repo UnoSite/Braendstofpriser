@@ -21,7 +21,7 @@ jobs:
 
           PR_TITLE=$(echo "$PR_INFO" | jq -r '.title')
           PR_BODY=$(echo "$PR_INFO" | jq -r '.body' | sed -E 's/<details>.*<\/details>//g' | tr -d '\r' | tr '\n' ' ')
-
+          
           # Trim PR-body hvis den er for lang
           PR_BODY_SHORT=$(echo "$PR_BODY" | cut -c1-500)
 
@@ -34,7 +34,8 @@ jobs:
           LABELS=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
             "https://api.github.com/repos/${{ github.repository }}/labels" | jq -r '.[].name')
 
-          echo "AVAILABLE_LABELS=$(echo $LABELS | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
+          AVAILABLE_LABELS=$(echo "$LABELS" | jq -R -s -c 'split("\n")[:-1]')
+          echo "AVAILABLE_LABELS=$AVAILABLE_LABELS" >> $GITHUB_ENV
 
       - name: Call OpenAI API for Label Prediction
         id: openai_request
@@ -61,14 +62,14 @@ jobs:
           echo "OpenAI Response: $RESPONSE"
 
           if [ -z "$RESPONSE" ]; then
-            echo "OpenAI API call failed. Exiting successfully."
-            exit 0
+            echo "❌ OpenAI API call failed. Exiting successfully."
+            exit 1
           fi
 
-          LABELS=$(echo "$RESPONSE" | jq -r '.choices[0].message.content | @json')
+          LABELS=$(echo "$RESPONSE" | jq -r '.choices[0].message.content' | jq -c '.' 2>/dev/null || echo "[]")
 
-          if [ "$LABELS" == "null" ] || [ -z "$LABELS" ]; then
-            echo "No relevant labels found. Exiting successfully."
+          if [ "$LABELS" == "[]" ] || [ -z "$LABELS" ]; then
+            echo "⚠️ No relevant labels found. Exiting."
             exit 0
           fi
 
@@ -78,5 +79,6 @@ jobs:
         run: |
           curl -s -X POST -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" \
-            -d "{\"labels\": $LABELS}"
+            -H "Content-Type: application/json" \
+            -d "{\"labels\": $LABELS}" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels"
