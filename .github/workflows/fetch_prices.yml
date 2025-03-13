@@ -2,7 +2,7 @@ name: Fetch Fuel Prices
 
 on:
   schedule:
-    - cron: '5 * * * *'
+    - cron: '5 */4 * * *'
   workflow_dispatch:
 
 jobs:
