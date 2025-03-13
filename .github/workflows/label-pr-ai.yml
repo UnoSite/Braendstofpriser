@@ -18,9 +18,9 @@ jobs:
         run: |
           PR_INFO=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
             "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}")
-          
+
           PR_TITLE=$(echo "$PR_INFO" | jq -r '.title')
-          PR_BODY=$(echo "$PR_INFO" | jq -r '.body')
+          PR_BODY=$(echo "$PR_INFO" | jq -r '.body' | sed 's/[^a-zA-Z0-9 .,?!:-]//g')
 
           echo "PR_TITLE=$PR_TITLE" >> $GITHUB_ENV
           echo "PR_BODY=$PR_BODY" >> $GITHUB_ENV
@@ -31,8 +31,7 @@ jobs:
           LABELS=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
             "https://api.github.com/repos/${{ github.repository }}/labels" | jq -r '.[].name')
 
-          LABELS_JSON=$(echo "$LABELS" | jq -R -s -c 'split("\n")[:-1]')
-          echo "AVAILABLE_LABELS=$LABELS_JSON" >> $GITHUB_ENV
+          echo "AVAILABLE_LABELS=$(echo $LABELS | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
 
       - name: Call OpenAI API for Label Prediction
         id: openai_request
@@ -56,18 +55,18 @@ jobs:
               "max_tokens": 50
             }')
 
-          PREDICTED_LABELS=$(echo "$RESPONSE" | jq -r '.choices[0].message.content')
+          LABELS=$(echo "$RESPONSE" | jq -r '.choices[0].message.content')
 
-          if [ "$PREDICTED_LABELS" == "null" ] || [ -z "$PREDICTED_LABELS" ]; then
+          if [ "$LABELS" == "null" ] || [ -z "$LABELS" ]; then
             echo "No relevant labels found. Exiting successfully."
             exit 0
           fi
 
-          echo "PREDICTED_LABELS=$PREDICTED_LABELS" >> $GITHUB_ENV
+          echo "LABELS=$LABELS" >> $GITHUB_ENV
 
       - name: Apply Labels
         run: |
           curl -s -X POST -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" \
-            -d "{\"labels\": ${{ env.PREDICTED_LABELS }}}"
+            -d "{\"labels\": ${{ env.LABELS }}}"
