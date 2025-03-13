@@ -22,11 +22,11 @@ jobs:
           PR_TITLE=$(echo "$PR_INFO" | jq -r '.title')
           PR_BODY=$(echo "$PR_INFO" | jq -r '.body' | sed -E 's/<details>.*<\/details>//g' | tr -d '\r' | tr '\n' ' ')
 
-          # Escape JSON input
-          PR_BODY_ESCAPED=$(echo "$PR_BODY" | jq -Rs '.')
+          # Trim PR-body hvis den er for lang
+          PR_BODY_SHORT=$(echo "$PR_BODY" | cut -c1-500)
 
           echo "PR_TITLE=$PR_TITLE" >> $GITHUB_ENV
-          echo "PR_BODY=$PR_BODY_ESCAPED" >> $GITHUB_ENV
+          echo "PR_BODY_SHORT=$PR_BODY_SHORT" >> $GITHUB_ENV
 
       - name: Get available labels
         id: get_labels
@@ -51,19 +51,21 @@ jobs:
                 },
                 {
                   "role": "user",
-                  "content": "Pull Request Title: '"$PR_TITLE"'\nPull Request Description: '"$PR_BODY"'\nAvailable Labels: '"$AVAILABLE_LABELS"'\n\nReturn a JSON array of the most relevant labels."
+                  "content": "Pull Request Title: '"$PR_TITLE"'\nPull Request Description: '"$PR_BODY_SHORT"'\nAvailable Labels: '"$AVAILABLE_LABELS"'\n\nReturn a JSON array of the most relevant labels."
                 }
               ],
               "temperature": 0.3,
               "max_tokens": 50
             }')
 
+          echo "OpenAI Response: $RESPONSE"
+
           if [ -z "$RESPONSE" ]; then
             echo "OpenAI API call failed. Exiting successfully."
             exit 0
           fi
 
-          LABELS=$(echo "$RESPONSE" | jq -r '.choices[0].message.content')
+          LABELS=$(echo "$RESPONSE" | jq -r '.choices[0].message.content | @json')
 
           if [ "$LABELS" == "null" ] || [ -z "$LABELS" ]; then
             echo "No relevant labels found. Exiting successfully."
@@ -77,4 +79,4 @@ jobs:
           curl -s -X POST -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" \
-            -d "{\"labels\": ${{ env.LABELS }}}"
+            -d "{\"labels\": $LABELS}"
