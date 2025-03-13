@@ -22,8 +22,11 @@ jobs:
           PR_TITLE=$(echo "$PR_INFO" | jq -r '.title')
           PR_BODY=$(echo "$PR_INFO" | jq -r '.body' | sed -E 's/<details>.*<\/details>//g' | tr -d '\r' | tr '\n' ' ')
 
+          # Escape JSON input
+          PR_BODY_ESCAPED=$(echo "$PR_BODY" | jq -Rs '.')
+
           echo "PR_TITLE=$PR_TITLE" >> $GITHUB_ENV
-          echo "$PR_BODY" > pr_body.txt
+          echo "PR_BODY=$PR_BODY_ESCAPED" >> $GITHUB_ENV
 
       - name: Get available labels
         id: get_labels
@@ -48,12 +51,17 @@ jobs:
                 },
                 {
                   "role": "user",
-                  "content": "Pull Request Title: '"$PR_TITLE"'\nPull Request Description: '$(cat pr_body.txt)'\nAvailable Labels: '"$AVAILABLE_LABELS"'\n\nReturn a JSON array of the most relevant labels."
+                  "content": "Pull Request Title: '"$PR_TITLE"'\nPull Request Description: '"$PR_BODY"'\nAvailable Labels: '"$AVAILABLE_LABELS"'\n\nReturn a JSON array of the most relevant labels."
                 }
               ],
               "temperature": 0.3,
               "max_tokens": 50
             }')
+
+          if [ -z "$RESPONSE" ]; then
+            echo "OpenAI API call failed. Exiting successfully."
+            exit 0
+          fi
 
           LABELS=$(echo "$RESPONSE" | jq -r '.choices[0].message.content')
 
