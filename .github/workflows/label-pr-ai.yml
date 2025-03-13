@@ -1,0 +1,73 @@
+name: AI Label PR Based on Description
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  label-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Get PR details
+        id: get_pr
+        run: |
+          PR_INFO=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}")
+          
+          PR_TITLE=$(echo "$PR_INFO" | jq -r '.title')
+          PR_BODY=$(echo "$PR_INFO" | jq -r '.body')
+
+          echo "PR_TITLE=$PR_TITLE" >> $GITHUB_ENV
+          echo "PR_BODY=$PR_BODY" >> $GITHUB_ENV
+
+      - name: Get available labels
+        id: get_labels
+        run: |
+          LABELS=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/labels" | jq -r '.[].name')
+
+          LABELS_JSON=$(echo "$LABELS" | jq -R -s -c 'split("\n")[:-1]')
+          echo "AVAILABLE_LABELS=$LABELS_JSON" >> $GITHUB_ENV
+
+      - name: Call OpenAI API for Label Prediction
+        id: openai_request
+        run: |
+          RESPONSE=$(curl -s -X POST "https://api.openai.com/v1/chat/completions" \
+            -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model": "gpt-4-turbo",
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "You are a GitHub automation bot. Based on the given pull request title and description, return a JSON array with the most relevant labels from the available labels. Only return labels that exist in the provided list."
+                },
+                {
+                  "role": "user",
+                  "content": "Pull Request Title: '"$PR_TITLE"'\nPull Request Description: '"$PR_BODY"'\nAvailable Labels: '"$AVAILABLE_LABELS"'\n\nReturn a JSON array of the most relevant labels."
+                }
+              ],
+              "temperature": 0.3,
+              "max_tokens": 50
+            }')
+
+          PREDICTED_LABELS=$(echo "$RESPONSE" | jq -r '.choices[0].message.content')
+
+          if [ "$PREDICTED_LABELS" == "null" ] || [ -z "$PREDICTED_LABELS" ]; then
+            echo "No relevant labels found. Exiting successfully."
+            exit 0
+          fi
+
+          echo "PREDICTED_LABELS=$PREDICTED_LABELS" >> $GITHUB_ENV
+
+      - name: Apply Labels
+        run: |
+          curl -s -X POST -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" \
+            -d "{\"labels\": ${{ env.PREDICTED_LABELS }}}"
