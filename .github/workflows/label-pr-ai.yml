@@ -25,8 +25,12 @@ jobs:
           # Trim PR-body hvis den er for lang
           PR_BODY_SHORT=$(echo "$PR_BODY" | cut -c1-500)
 
-          echo "PR_TITLE=$PR_TITLE" >> $GITHUB_ENV
-          echo "PR_BODY_SHORT=$PR_BODY_SHORT" >> $GITHUB_ENV
+          # Escape strings for korrekt JSON-formatering
+          PR_TITLE_JSON=$(echo "$PR_TITLE" | jq -Rs .)
+          PR_BODY_SHORT_JSON=$(echo "$PR_BODY_SHORT" | jq -Rs .)
+
+          echo "PR_TITLE=$PR_TITLE_JSON" >> $GITHUB_ENV
+          echo "PR_BODY_SHORT=$PR_BODY_SHORT_JSON" >> $GITHUB_ENV
 
       - name: Get available labels
         id: get_labels
@@ -43,29 +47,31 @@ jobs:
           RESPONSE=$(curl -s -X POST "https://api.openai.com/v1/chat/completions" \
             -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
             -H "Content-Type: application/json" \
-            -d '{
-              "model": "gpt-4-turbo",
-              "messages": [
+            -d "{
+              \"model\": \"gpt-4-turbo\",
+              \"messages\": [
                 {
-                  "role": "system",
-                  "content": "You are a GitHub automation bot. Based on the given pull request title and description, return a JSON array with the most relevant labels from the available labels. Only return labels that exist in the provided list."
+                  \"role\": \"system\",
+                  \"content\": \"You are a GitHub automation bot. Based on the given pull request title and description, return a JSON array with the most relevant labels from the available labels. Only return labels that exist in the provided list.\"
                 },
                 {
-                  "role": "user",
-                  "content": "Pull Request Title: '"$PR_TITLE"'\nPull Request Description: '"$PR_BODY_SHORT"'\nAvailable Labels: '"$AVAILABLE_LABELS"'\n\nReturn a JSON array of the most relevant labels."
+                  \"role\": \"user\",
+                  \"content\": \"Pull Request Title: $PR_TITLE\nPull Request Description: $PR_BODY_SHORT\nAvailable Labels: $AVAILABLE_LABELS\n\nReturn a JSON array of the most relevant labels.\"
                 }
               ],
-              "temperature": 0.3,
-              "max_tokens": 50
-            }')
+              \"temperature\": 0.3,
+              \"max_tokens\": 50
+            }")
 
           echo "OpenAI Response: $RESPONSE"
 
-          if [ -z "$RESPONSE" ]; then
-            echo "❌ OpenAI API call failed. Exiting successfully."
+          # Håndter fejl, hvis OpenAI ikke returnerer noget brugbart
+          if [ -z "$RESPONSE" ] || echo "$RESPONSE" | jq -e '.error' >/dev/null; then
+            echo "❌ OpenAI API call failed. Exiting."
             exit 1
           fi
 
+          # Hent labels fra OpenAI's svar
           LABELS=$(echo "$RESPONSE" | jq -r '.choices[0].message.content' | jq -c '.' 2>/dev/null || echo "[]")
 
           if [ "$LABELS" == "[]" ] || [ -z "$LABELS" ]; then
