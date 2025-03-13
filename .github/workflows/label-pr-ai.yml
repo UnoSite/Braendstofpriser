@@ -25,12 +25,9 @@ jobs:
           # Trim PR-body hvis den er for lang
           PR_BODY_SHORT=$(echo "$PR_BODY" | cut -c1-500)
 
-          # Escape strings for korrekt JSON-formatering
-          PR_TITLE_JSON=$(echo "$PR_TITLE" | jq -Rs .)
-          PR_BODY_SHORT_JSON=$(echo "$PR_BODY_SHORT" | jq -Rs .)
-
-          echo "PR_TITLE=$PR_TITLE_JSON" >> $GITHUB_ENV
-          echo "PR_BODY_SHORT=$PR_BODY_SHORT_JSON" >> $GITHUB_ENV
+          # Escape strings til korrekt JSON-format
+          echo "PR_TITLE=$(echo "$PR_TITLE" | jq -Rs .)" >> $GITHUB_ENV
+          echo "PR_BODY_SHORT=$(echo "$PR_BODY_SHORT" | jq -Rs .)" >> $GITHUB_ENV
 
       - name: Get available labels
         id: get_labels
@@ -44,24 +41,30 @@ jobs:
       - name: Call OpenAI API for Label Prediction
         id: openai_request
         run: |
+          # Byg JSON payload korrekt med printf for at sikre gyldigt format
+          PAYLOAD=$(printf '{
+            "model": "gpt-4-turbo",
+            "messages": [
+              {
+                "role": "system",
+                "content": "You are a GitHub automation bot. Based on the given pull request title and description, return a JSON array with the most relevant labels from the available labels. Only return labels that exist in the provided list."
+              },
+              {
+                "role": "user",
+                "content": "Pull Request Title: %s\nPull Request Description: %s\nAvailable Labels: %s\n\nReturn a JSON array of the most relevant labels."
+              }
+            ],
+            "temperature": 0.3,
+            "max_tokens": 50
+          }' "$PR_TITLE" "$PR_BODY_SHORT" "$AVAILABLE_LABELS")
+
+          echo "Sending the following JSON payload to OpenAI API:"
+          echo "$PAYLOAD"
+
           RESPONSE=$(curl -s -X POST "https://api.openai.com/v1/chat/completions" \
             -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
             -H "Content-Type: application/json" \
-            -d "{
-              \"model\": \"gpt-4-turbo\",
-              \"messages\": [
-                {
-                  \"role\": \"system\",
-                  \"content\": \"You are a GitHub automation bot. Based on the given pull request title and description, return a JSON array with the most relevant labels from the available labels. Only return labels that exist in the provided list.\"
-                },
-                {
-                  \"role\": \"user\",
-                  \"content\": \"Pull Request Title: $PR_TITLE\nPull Request Description: $PR_BODY_SHORT\nAvailable Labels: $AVAILABLE_LABELS\n\nReturn a JSON array of the most relevant labels.\"
-                }
-              ],
-              \"temperature\": 0.3,
-              \"max_tokens\": 50
-            }")
+            -d "$PAYLOAD")
 
           echo "OpenAI Response: $RESPONSE"
 
