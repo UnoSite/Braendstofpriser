@@ -95,3 +95,16 @@ jobs:
             -H "Content-Type: application/json" \
             -d "{\"labels\": $LABELS}" \
             "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels"
+
+      - name: Comment on Pull Request
+        run: |
+          COMMENT_BODY=$(jq -n --arg labels "$LABELS" \
+            '{
+                body: ("The following labels have been added based on the pull request title and description: " + $labels)
+            }')
+
+          curl -s -X POST -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Content-Type: application/json" \
+            -d "$COMMENT_BODY" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
