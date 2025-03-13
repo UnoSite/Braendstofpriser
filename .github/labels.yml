@@ -1,85 +1,70 @@
 ---
 - name: "breaking-change"
-  color: ee0701
-  description: "A breaking change for existing users."
-- name: "bugfix"
-  color: ee0701
-  description: "Inconsistencies or issues which will cause a problem for users or implementors."
-- name: "documentation"
-  color: 0052cc
-  description: "Solely about the documentation of the project."
-- name: "enhancement"
-  color: 1d76db
-  description: "Enhancement of the code, not introducing new features."
-- name: "refactor"
-  color: 1d76db
-  description: "Improvement of existing code, not introducing new features."
-- name: "performance"
-  color: 1d76db
-  description: "Improving performance, not introducing new features."
-- name: "new-feature"
-  color: 0e8a16
-  description: "New features or options."
-- name: "maintenance"
-  color: 2af79e
-  description: "Generic maintenance tasks."
-- name: "ci"
-  color: 1d76db
-  description: "Work that improves the continue integration."
-- name: "dependencies"
-  color: 1d76db
-  description: "Upgrade or downgrade of project dependencies."
-
-- name: "in-progress"
-  color: fbca04
-  description: "Issue is currently being resolved by a developer."
-- name: "stale"
-  color: fef2c0
-  description: "There has not been activity on this issue or PR for quite some time."
-- name: "no-stale"
-  color: fef2c0
-  description: "This issue or PR is exempted from the stable bot."
-
-- name: "security"
-  color: ee0701
-  description: "Marks a security issue that needs to be resolved asap."
-- name: "incomplete"
-  color: fef2c0
-  description: "Marks a PR or issue that is missing information."
-- name: "invalid"
-  color: fef2c0
-  description: "Marks a PR or issue that is missing information."
-
-- name: "beginner-friendly"
-  color: 0e8a16
-  description: "Good first issue for people wanting to contribute to the project."
-- name: "help-wanted"
-  color: 0e8a16
-  description: "We need some extra helping hands or expertise in order to resolve this."
-
-- name: "hacktoberfest"
-  description: "Issues/PRs are participating in the Hacktoberfest."
-  color: fbca04
-- name: "hacktoberfest-accepted"
-  description: "Issues/PRs are participating in the Hacktoberfest."
-  color: fbca04
-
-- name: "priority-critical"
-  color: ee0701
-  description: "This should be dealt with ASAP. Not fixing this issue would be a serious error."
-- name: "priority-high"
   color: b60205
-  description: "After critical issues are fixed, these should be dealt with before any further issues."
-- name: "priority-medium"
-  color: 0e8a16
-  description: "This issue may be useful, and needs some attention."
-- name: "priority-low"
-  color: e4ea8a
-  description: "Nice addition, maybe... someday..."
+  description: "Something in the release is breaking current functionality"
+- name: "bug"
+  color: d73a4a
+  description: "Something isn't working"
+- name: "dependencies"
+  color: 9F5E8B
+  description: "Updates to dependencies"
+- name: "documentation"
+  color: 0075ca
+  description: "Improvements or additions to documentation"
+- name: "duplicate"
+  color: 799799
+  description: "This issue or pull request already exists"
+- name: "enhancement"
+  color: 0E8A16
+  description: "New feature or request"
+- name: "help-wanted"
+  color: D46EE9
+  description: "Extra attention is needed"
+- name: "invalid"
+  color: 46311F
+  description: "This doesn't seem right"
+- name: "LOCKED"
+  color: ff0000
+  description: "This thread is locked"
 
 - name: "major"
-  color: b60205
-  description: "This PR causes a major version bump in the version number."
+  color: 2fff00
+  description: "Bump major version number"
 - name: "minor"
-  color: 0e8a16
-  description: "This PR causes a minor version bump in the version number."
+  color: fdff12
+  description: "Bump minor version number"
+- name: "patch"
+  color: ff9a00
+  description: "Bump patch version number"
+
+- name: "pr-on-hold"
+  color: 8c3d24
+  description: "This PR is on hold and not scheduled for merge currently"
+- name: "question"
+  color: 9d59d4
+  description: "Further information is requested"
+- name: "skip-changelog"
+  color: f1a7f4
+  description: "Skips changelog on release"
+- name: "wontfix"
+  color: 424742
+  description: "This will not be worked on"
+
+- name: "size/XS"
+  color: b8bab8
+  description: "Denotes a PR that changes 0-9 lines"
+- name: "size/S"
+  color: b8bab8
+  description: "Denotes a PR that changes 10-29 lines"
+- name: "size/M"
+  color: b8bab8
+  description: "Denotes a PR that changes 30-99 lines"
+- name: "size/L"
+  color: b8bab8
+  description: "Denotes a PR that changes 100-499 lines"
+- name: "size/XL"
+  color: b8bab8
+  description: "Denotes a PR that changes 500-999 lines"
+- name: "size/XXL"
+  color: b8bab8
+  description: "Denotes a PR that changes 1000+ lines"
