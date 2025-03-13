@@ -20,10 +20,10 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}")
 
           PR_TITLE=$(echo "$PR_INFO" | jq -r '.title')
-          PR_BODY=$(echo "$PR_INFO" | jq -r '.body' | sed 's/[^a-zA-Z0-9 .,?!:-]//g')
+          PR_BODY=$(echo "$PR_INFO" | jq -r '.body' | sed -E 's/<details>.*<\/details>//g' | tr -d '\r' | tr '\n' ' ')
 
           echo "PR_TITLE=$PR_TITLE" >> $GITHUB_ENV
-          echo "PR_BODY=$PR_BODY" >> $GITHUB_ENV
+          echo "$PR_BODY" > pr_body.txt
 
       - name: Get available labels
         id: get_labels
@@ -48,7 +48,7 @@ jobs:
                 },
                 {
                   "role": "user",
-                  "content": "Pull Request Title: '"$PR_TITLE"'\nPull Request Description: '"$PR_BODY"'\nAvailable Labels: '"$AVAILABLE_LABELS"'\n\nReturn a JSON array of the most relevant labels."
+                  "content": "Pull Request Title: '"$PR_TITLE"'\nPull Request Description: '$(cat pr_body.txt)'\nAvailable Labels: '"$AVAILABLE_LABELS"'\n\nReturn a JSON array of the most relevant labels."
                 }
               ],
               "temperature": 0.3,
