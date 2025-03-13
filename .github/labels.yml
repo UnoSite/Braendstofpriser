@@ -5,6 +5,9 @@
 - name: "bug"
   color: d73a4a
   description: "Something isn't working"
+- name: "bug-fix"
+  color: 4ad73a
+  description: "Fixed things that didn’t work but now do"
 - name: "dependencies"
   color: 9F5E8B
   description: "Updates to dependencies"
