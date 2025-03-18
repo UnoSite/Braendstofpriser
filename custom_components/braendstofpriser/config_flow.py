@@ -10,14 +10,13 @@ from .sensor import remove_unused_entities_and_devices  # Importer oprydningsfun
 _LOGGER = logging.getLogger(__name__)
 
 def fetch_companies():
-    """Henter listen af selskaber fra braendstofpris-API'et."""
+    """Henter listen af selskaber fra brændstofpris-API'et."""
     _LOGGER.info("Henter liste over selskaber fra API: %s", API_URL)
     try:
         response = requests.get(API_URL, timeout=10)
         response.raise_for_status()
         data = response.json()
 
-        # Filtrer selskaber fra API-data
         companies = sorted(set(entry.get('selskab') for entry in data.get('priser', []) if entry.get('selskab')))
 
         if not companies:
@@ -32,12 +31,12 @@ def fetch_companies():
         return {}
 
 class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Haandterer opsaetningen af Braendstofpriser integrationen."""
+    """Håndterer opsætningen af Brændstofpriser integrationen."""
 
     VERSION = 1
 
     async def async_step_user(self, user_input=None):
-        """Trin 1: Vaelg selskaber."""
+        """Trin 1: Vælg selskaber."""
         if user_input is not None:
             _LOGGER.debug("Brugeren har valgt selskaber: %s", user_input[CONF_COMPANIES])
             self.context["selected_companies"] = user_input[CONF_COMPANIES]
@@ -45,7 +44,7 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         companies = await self.hass.async_add_executor_job(fetch_companies)
         if not companies:
-            _LOGGER.error("Kunne ikke hente selskaber fra API. Afbryder opsaetning.")
+            _LOGGER.error("Kunne ikke hente selskaber fra API. Afbryder opsætning.")
             return self.async_abort(reason="cannot_connect")
 
         schema = vol.Schema({
@@ -61,10 +60,10 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(step_id="user", data_schema=schema)
 
     async def async_step_products(self, user_input=None):
-        """Trin 2: Vaelg braendstofprodukter."""
+        """Trin 2: Vælg brændstofprodukter."""
         if user_input is not None:
             _LOGGER.debug("Brugeren har valgt produkter: %s", user_input[CONF_PRODUCTS])
-            return self.async_create_entry(title="Braendstofpriser", data={
+            return self.async_create_entry(title="Brændstofpriser", data={
                 CONF_COMPANIES: self.context["selected_companies"],
                 CONF_PRODUCTS: [PRODUCT_NAME_MAP[name] for name in user_input[CONF_PRODUCTS]]
             })
@@ -81,18 +80,8 @@ class BraendstofpriserConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         return self.async_show_form(step_id="products", data_schema=schema)
 
-    @staticmethod
-    @callback
-    def async_get_options_flow(config_entry):
-        """Returnerer options flow handleren."""
-        return BraendstofpriserOptionsFlowHandler(config_entry)
-
-class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
-    """Haandterer aendringer af indstillinger efter opsaetning."""
-
-    def __init__(self, config_entry):
-        """Gemmer en reference til den aktuelle konfigurationsindgang."""
-        self.config_entry = config_entry
+class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
+    """Håndterer ændringer af indstillinger efter opsætning."""
 
     async def async_step_init(self, user_input=None):
         """Starter reconfiguration-processen."""
@@ -100,7 +89,7 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
 
     async def async_step_select_companies(self, user_input=None):
         """Trin 1: Opdater valgte selskaber."""
-        _LOGGER.info("Reconfiguration: Trin 1 - Vaelg selskaber")
+        _LOGGER.info("Reconfiguration: Trin 1 - Vælg selskaber")
 
         if user_input is not None:
             _LOGGER.debug("Opdaterede selskaber: %s", user_input[CONF_COMPANIES])
@@ -125,8 +114,8 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
         return self.async_show_form(step_id="select_companies", data_schema=schema)
 
     async def async_step_select_products(self, user_input=None):
-        """Trin 2: Opdater valgte braendstofprodukter."""
-        _LOGGER.info("Reconfiguration: Trin 2 - Vaelg braendstofprodukter")
+        """Trin 2: Opdater valgte brændstofprodukter."""
+        _LOGGER.info("Reconfiguration: Trin 2 - Vælg brændstofprodukter")
 
         if user_input is not None:
             _LOGGER.debug("Opdaterede produkter: %s", user_input[CONF_PRODUCTS])
@@ -142,10 +131,10 @@ class BraendstofpriserOptionsFlowHandler(config_entries.OptionsFlow):
                 for product in updated_data[CONF_PRODUCTS]:
                     active_entity_ids.add(f"{self.config_entry.entry_id}_{company}_{product}")
 
-            # **Genindlaes integrationen for at anvende aendringer**
+            # **Genindlæs integrationen for at anvende ændringer**
             await self.hass.config_entries.async_reload(self.config_entry.entry_id)
 
-            # **Fjern gamle sensorer og enheder efter genindlaesning**
+            # **Fjern gamle sensorer og enheder efter genindlæsning**
             await remove_unused_entities_and_devices(self.hass, self.config_entry, active_entity_ids)
 
             return self.async_create_entry(title="", data={})
