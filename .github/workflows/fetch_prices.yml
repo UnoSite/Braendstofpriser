@@ -12,12 +12,12 @@ jobs:
 
     steps:
     - name: Tjek repo ud
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.0.0
       with:
         token: ${{ secrets.PAT_TOKEN }}
 
     - name: Opsæt Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.0.0
       with:
         python-version: '3.11'
 
