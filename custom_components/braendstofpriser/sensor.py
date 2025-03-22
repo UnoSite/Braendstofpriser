@@ -115,8 +115,8 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{entry_id}_{company}")},
             name=f"{company} Braendstofpriser",
-            manufacturer="Braendstofpriser API",
-            model="Braendstofpriser Sensor",
+            manufacturer=CONF_MANUFACTURER,
+            model=CONF_MODEL,
             configuration_url="https://github.com/UnoSite/Braendstofpriser"
         )
         _LOGGER.debug("Oprettet sensor: %s", self._attr_name)
