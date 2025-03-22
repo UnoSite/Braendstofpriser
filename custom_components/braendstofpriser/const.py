@@ -12,6 +12,8 @@ Denne fil indeholder:
 
 # 🔹 Domaenenavn for integrationen
 DOMAIN = "braendstofpriser"
+CONF_MANUFACTURER = "UnoSite"
+CONF_MODEL = "Brændstofpriser"
 
 # 🔹 Konfigurationsnoegler brugt i config_flow.py
 CONF_COMPANIES = "companies"  # Valgte selskaber
