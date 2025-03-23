@@ -1,26 +1,12 @@
 {
   "seneste_ændring": {
-    "dato": "2025-03-22",
+    "dato": "2025-03-23",
     "ændring": {
       "benzin": "N/A",
       "diesel": "N/A"
     }
   },
   "priser": [
-    {
-      "selskab": "Shell",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "15.09",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "17.29",
-      "diesel_b7": "14.39",
-      "diesel_plus": "15.29",
-      "hvo_xtl": "15.59",
-      "el_normal": "​",
-      "el_hurtig": "​",
-      "el_lyn": "3.75",
-      "sidst_opdateret": "22-03-2025 00:00"
-    },
     {
       "selskab": "OK",
       "blyfri_92": "​",
@@ -33,35 +19,7 @@
       "el_normal": "2.80",
       "el_hurtig": "3.30",
       "el_lyn": "3.80",
-      "sidst_opdateret": "22-03-2025 00:00"
-    },
-    {
-      "selskab": "Q8",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "13.89",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "14.96",
-      "diesel_b7": "13.19",
-      "diesel_plus": "13.99",
-      "hvo_xtl": "​",
-      "el_normal": "3.19",
-      "el_hurtig": "​",
-      "el_lyn": "3.90",
-      "sidst_opdateret": "22-03-2025 00:00"
-    },
-    {
-      "selskab": "F24",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "13.79",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "14.86",
-      "diesel_b7": "13.09",
-      "diesel_plus": "13.89",
-      "hvo_xtl": "​",
-      "el_normal": "​",
-      "el_hurtig": "​",
-      "el_lyn": "3.75",
-      "sidst_opdateret": "22-03-2025 00:00"
+      "sidst_opdateret": "23-03-2025 01:00"
     },
     {
       "selskab": "Go'on",
@@ -75,7 +33,7 @@
       "el_normal": "​",
       "el_hurtig": "​",
       "el_lyn": "​",
-      "sidst_opdateret": "22-03-2025 00:00"
+      "sidst_opdateret": "23-03-2025 01:00"
     },
     {
       "selskab": "Clever",
@@ -89,7 +47,49 @@
       "el_normal": "3.49",
       "el_hurtig": "3.49",
       "el_lyn": "4.99",
-      "sidst_opdateret": "22-03-2025 00:00"
+      "sidst_opdateret": "23-03-2025 01:00"
+    },
+    {
+      "selskab": "Shell",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "15.09",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "17.29",
+      "diesel_b7": "14.39",
+      "diesel_plus": "15.29",
+      "hvo_xtl": "15.59",
+      "el_normal": "​",
+      "el_hurtig": "​",
+      "el_lyn": "3.75",
+      "sidst_opdateret": "23-03-2025 00:00"
+    },
+    {
+      "selskab": "Q8",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "13.89",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "14.96",
+      "diesel_b7": "13.19",
+      "diesel_plus": "13.99",
+      "hvo_xtl": "​",
+      "el_normal": "3.19",
+      "el_hurtig": "​",
+      "el_lyn": "3.90",
+      "sidst_opdateret": "23-03-2025 00:00"
+    },
+    {
+      "selskab": "F24",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "13.79",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "14.86",
+      "diesel_b7": "13.09",
+      "diesel_plus": "13.89",
+      "hvo_xtl": "​",
+      "el_normal": "​",
+      "el_hurtig": "​",
+      "el_lyn": "3.75",
+      "sidst_opdateret": "23-03-2025 00:00"
     },
     {
       "selskab": "OIL! tank & go",
