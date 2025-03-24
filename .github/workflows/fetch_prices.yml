@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: Tjek repo ud
-      uses: actions/checkout@v4.0.0
+      uses: actions/checkout@v4.2.2
       with:
         token: ${{ secrets.PAT_TOKEN }}
 
