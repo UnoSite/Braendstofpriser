@@ -19,7 +19,21 @@
       "el_normal": "​",
       "el_hurtig": "​",
       "el_lyn": "​",
-      "sidst_opdateret": "25-03-2025 12:00"
+      "sidst_opdateret": "25-03-2025 16:00"
+    },
+    {
+      "selskab": "OIL! tank & go",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "13.89",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "​",
+      "diesel_b7": "13.09",
+      "diesel_plus": "​",
+      "hvo_xtl": "14.09",
+      "el_normal": "​",
+      "el_hurtig": "​",
+      "el_lyn": "​",
+      "sidst_opdateret": "25-03-2025 14:00"
     },
     {
       "selskab": "Go'on",
@@ -132,20 +146,6 @@
       "el_hurtig": "3.49",
       "el_lyn": "4.99",
       "sidst_opdateret": "25-03-2025 00:00"
-    },
-    {
-      "selskab": "OIL! tank & go",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "13.79",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "​",
-      "diesel_b7": "13.09",
-      "diesel_plus": "​",
-      "hvo_xtl": "14.09",
-      "el_normal": "​",
-      "el_hurtig": "​",
-      "el_lyn": "​",
-      "sidst_opdateret": "24-03-2025 11:00"
     }
   ]
 }
