@@ -10,8 +10,8 @@
     {
       "selskab": "Circle K",
       "blyfri_92": "​",
-      "blyfri_95_e10": "14.19",
-      "blyfri_95_plus_e10": "14.99",
+      "blyfri_95_e10": "14.29",
+      "blyfri_95_plus_e10": "15.09",
       "blyfri_plus_e5": "​",
       "diesel_b7": "13.19",
       "diesel_plus": "13.99",
@@ -19,7 +19,35 @@
       "el_normal": "​",
       "el_hurtig": "​",
       "el_lyn": "3.90",
-      "sidst_opdateret": "01-04-2025 00:00"
+      "sidst_opdateret": "01-04-2025 11:00"
+    },
+    {
+      "selskab": "ingo",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "14.19",
+      "blyfri_95_plus_e10": "14.68",
+      "blyfri_plus_e5": "​",
+      "diesel_b7": "13.09",
+      "diesel_plus": "​",
+      "hvo_xtl": "​",
+      "el_normal": "​",
+      "el_hurtig": "​",
+      "el_lyn": "​",
+      "sidst_opdateret": "01-04-2025 11:00"
+    },
+    {
+      "selskab": "OK",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "14.19",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "16.16",
+      "diesel_b7": "13.09",
+      "diesel_plus": "​",
+      "hvo_xtl": "​",
+      "el_normal": "2.80",
+      "el_hurtig": "3.30",
+      "el_lyn": "3.80",
+      "sidst_opdateret": "01-04-2025 11:00"
     },
     {
       "selskab": "Shell",
@@ -33,20 +61,6 @@
       "el_normal": "​",
       "el_hurtig": "​",
       "el_lyn": "3.75",
-      "sidst_opdateret": "01-04-2025 00:00"
-    },
-    {
-      "selskab": "OK",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "14.09",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "16.06",
-      "diesel_b7": "13.09",
-      "diesel_plus": "​",
-      "hvo_xtl": "​",
-      "el_normal": "2.80",
-      "el_hurtig": "3.30",
-      "el_lyn": "3.80",
       "sidst_opdateret": "01-04-2025 00:00"
     },
     {
@@ -118,20 +132,6 @@
       "el_hurtig": "​",
       "el_lyn": "​",
       "sidst_opdateret": "31-03-2025 12:00"
-    },
-    {
-      "selskab": "ingo",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "14.09",
-      "blyfri_95_plus_e10": "14.58",
-      "blyfri_plus_e5": "​",
-      "diesel_b7": "13.09",
-      "diesel_plus": "​",
-      "hvo_xtl": "​",
-      "el_normal": "​",
-      "el_hurtig": "​",
-      "el_lyn": "​",
-      "sidst_opdateret": "31-03-2025 11:00"
     }
   ]
 }
