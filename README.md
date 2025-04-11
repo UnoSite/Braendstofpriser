@@ -1,4 +1,4 @@
-# Brændstofpriser - Home Assistant integration
+# Brændstofpriser v3 - Home Assistant integration
 
 > [!Warning]
 > This integration is for the Danish market.
