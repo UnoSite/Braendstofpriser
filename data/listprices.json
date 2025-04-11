@@ -8,6 +8,20 @@
   },
   "priser": [
     {
+      "selskab": "OK",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "13.69",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "15.66",
+      "diesel_b7": "12.69",
+      "diesel_plus": "​",
+      "hvo_xtl": "​",
+      "el_normal": "2.65",
+      "el_hurtig": "3.15",
+      "el_lyn": "3.65",
+      "sidst_opdateret": "11-04-2025 10:00"
+    },
+    {
       "selskab": "Circle K",
       "blyfri_92": "​",
       "blyfri_95_e10": "13.79",
@@ -33,20 +47,6 @@
       "el_normal": "​",
       "el_hurtig": "​",
       "el_lyn": "3.75",
-      "sidst_opdateret": "11-04-2025 00:00"
-    },
-    {
-      "selskab": "OK",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "13.69",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "15.66",
-      "diesel_b7": "12.69",
-      "diesel_plus": "​",
-      "hvo_xtl": "​",
-      "el_normal": "2.80",
-      "el_hurtig": "3.30",
-      "el_lyn": "3.80",
       "sidst_opdateret": "11-04-2025 00:00"
     },
     {
