@@ -1,7 +1,5 @@
 # Brændstofpriser v3 - Home Assistant integration
 
-> [!Warning]
-> This integration is for the Danish market.
 
 [![Version](https://img.shields.io/github/v/release/UnoSite/Braendstofpriser?label=version&style=for-the-badge)](https://github.com/UnoSite/Braendstofpriser/releases/latest)
 [![Last Commit](https://img.shields.io/github/last-commit/UnoSite/Braendstofpriser?style=for-the-badge)](https://github.com/UnoSite/Braendstofpriser/commits/main/)
@@ -18,7 +16,7 @@
 
 ---
 
-## 📌 **Overview**
+## 📌 **Beskrivelse**
 
 **Brændstofpriser** is a custom integration for Home Assistant that fetches live fuel prices from various providers in Denmark. This integration allows you to monitor up-to-date fuel prices directly in your Home Assistant dashboard.
 
@@ -28,7 +26,7 @@
 
 ---
 
-## 🚀 **Features**
+## 🚀 **Funktioner**
 
 ✅ Fetches real-time fuel prices from an online API.  
 ✅ Supports **gasoline, diesel, and electric charging prices**.  
@@ -40,7 +38,7 @@
 
 ## 📥 **Installation**
 
-### **🔹 Manual Installation**
+### **🔹 Manuel Installation**
 1. **Download the latest release** from the [GitHub releases](https://github.com/UnoSite/Braendstofpriser/releases).
 2. **Copy the `braendstofpriser` folder** into your Home Assistant `custom_components` directory.
 3. **Restart Home Assistant.**
@@ -48,7 +46,7 @@
    - Navigate to **Settings > Devices & Services > Integrations**.
    - Click **Add Integration** and search for **Brændstofpriser**.
 
-### **🔹 HACS Installation (Recommended)**
+### **🔹 HACS Installation (Anbefales)**
 1. Add this repository as a **custom repository** in [HACS](https://hacs.xyz/).
 2. Search for **Brændstofpriser** in HACS and install the integration.
 3. Restart Home Assistant.
@@ -57,7 +55,7 @@
 
 ---
 
-## ⚙️ **Configuration**
+## ⚙️ **Konfigurering**
 
 Once installed, you can configure the integration directly from the Home Assistant UI.
 
@@ -71,30 +69,30 @@ Once installed, you can configure the integration directly from the Home Assista
 
 ---
 
-## 📊 **Supported Fuel Types**
-| Fuel Type |
+## ⛽ **Tilgængelige brændstof typer**
+| Brændstof typer |
 |-------------|
 | Benzin 92 (E5) |
 | Benzin 95 (E10) |
 | Benzin 95+ (E10) |
 | Benzin 100 (E5) |
 | Diesel (B7) |
-| Diesel+ |
+| Diesel+ (B7) |
 | HVO (XTL) |
 | EL (Normal) |
 | EL (Hurtig) |
-| EL (Turbo) |
+| EL (Lyn) |
 
 ---
 
-## 🔧 **Updating the Integration**
+## 🔧 **Opdater integrationen**
 When a new version is available:
 1. **HACS Users** – Update directly from HACS.
 2. **Manual Users** – Replace the `braendstofpriser` folder with the latest release and restart Home Assistant.
 
 ---
 
-## ❓ **Issues & Support**
+## ❓ **Anmeld fejl eller få hjælp**
 If you encounter any issues or have feature requests, please open an issue on GitHub:
 
 [![Static Badge](https://img.shields.io/badge/Report-issues-E00000?style=for-the-badge)](https://github.com/UnoSite/Braendstofpriser/issues)
