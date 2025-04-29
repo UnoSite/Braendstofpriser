@@ -8,6 +8,20 @@
   },
   "priser": [
     {
+      "selskab": "OIL! tank & go",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "13.79",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "​",
+      "diesel_b7": "12.69",
+      "diesel_plus": "​",
+      "hvo_xtl": "13.69",
+      "el_normal": "​",
+      "el_hurtig": "​",
+      "el_lyn": "​",
+      "sidst_opdateret": "29-04-2025 13:00"
+    },
+    {
       "selskab": "Shell",
       "blyfri_92": "​",
       "blyfri_95_e10": "15.09",
@@ -90,20 +104,6 @@
       "el_hurtig": "3.49",
       "el_lyn": "4.99",
       "sidst_opdateret": "29-04-2025 00:00"
-    },
-    {
-      "selskab": "OIL! tank & go",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "13.79",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "​",
-      "diesel_b7": "12.69",
-      "diesel_plus": "​",
-      "hvo_xtl": "13.69",
-      "el_normal": "​",
-      "el_hurtig": "​",
-      "el_lyn": "​",
-      "sidst_opdateret": "28-04-2025 13:00"
     },
     {
       "selskab": "Circle K",
