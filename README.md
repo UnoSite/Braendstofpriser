@@ -1,5 +1,8 @@
 # Brændstofpriser - Home Assistant integration
 
+> [!CAUTION]
+> Integrationen er under en større omskrivning til version 3. [Se mere her](https://github.com/UnoSite/Braendstofpriser/pull/109)
+
 > [!Warning]
 > This integration is for the Danish market.
 
