@@ -39,5 +39,5 @@ jobs:
         git add data/listprices.json
         if ! git diff --cached --quiet; then
           git commit -m "Opdateret brændstofpriser"
-          git push
+          git push --force
         fi
