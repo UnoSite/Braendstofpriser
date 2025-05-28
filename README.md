@@ -18,11 +18,11 @@
 
 ## 📌 **Beskrivelse**
 
-**Brændstofpriser** is a custom integration for Home Assistant that fetches live fuel prices from various providers in Denmark. This integration allows you to monitor up-to-date fuel prices directly in your Home Assistant dashboard.
+**Brændstofpriser** er en custom integration til Home Assistant, der henter live brændstofpriser fra forskellige udbydere i Danmark. Denne integration gør det muligt at overvåge opdaterede brændstofpriser direkte i dit Home Assistant-dashboard.
 
-- Automatically updates fuel prices every hour.
-- Supports multiple fuel providers and fuel types.
-- Easy setup via the Home Assistant UI.
+- Opdaterer brændstofpriser automatisk hver time.
+- Understøtter flere brændstofudbydere og brændstoftyper.
+- Nem opsætning via Home Assistant-brugerfladen.
 
 ---
 
