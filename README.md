@@ -16,7 +16,7 @@
 
 ---
 
-## 📌 **Beskrivelse**
+## 📃 **Beskrivelse**
 
 **Brændstofpriser** er en custom integration til Home Assistant, der henter live brændstofpriser fra forskellige udbydere i Danmark. Denne integration gør det muligt at overvåge opdaterede brændstofpriser direkte i dit Home Assistant-dashboard.
 
@@ -38,7 +38,7 @@
 
 ## 📥 **Installation**
 
-### **🔹 Manuel Installation**
+### 🔹 **Manuel Installation**
 1. **Download the latest release** from the [GitHub releases](https://github.com/UnoSite/Braendstofpriser/releases).
 2. **Copy the `braendstofpriser` folder** into your Home Assistant `custom_components` directory.
 3. **Restart Home Assistant.**
@@ -46,7 +46,7 @@
    - Navigate to **Settings > Devices & Services > Integrations**.
    - Click **Add Integration** and search for **Brændstofpriser**.
 
-### **🔹 HACS Installation (Anbefales)**
+### 🔹 **HACS Installation (Anbefales)**
 1. Add this repository as a **custom repository** in [HACS](https://hacs.xyz/).
 2. Search for **Brændstofpriser** in HACS and install the integration.
 3. Restart Home Assistant.
@@ -69,8 +69,8 @@ Once installed, you can configure the integration directly from the Home Assista
 
 ---
 
-## ⛽ **Tilgængelige brændstof typer**
-| Brændstof typer |
+## ⛽ **Tilgængelige forhandlere**
+| Forhandler |
 |-------------|
 | Benzin 92 (E5) |
 | Benzin 95 (E10) |
