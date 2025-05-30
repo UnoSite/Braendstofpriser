@@ -28,11 +28,11 @@
 
 ## 🚀 **Funktioner**
 
-✅ Fetches real-time fuel prices from an online API.  
-✅ Supports **gasoline, diesel, and electric charging prices**.  
-✅ Automatically removes unused entities after reconfiguration.  
-✅ Integration updates prices **hourly** via a Home Assistant DataUpdateCoordinator.  
-✅ **Fully configurable via Home Assistant UI** – no YAML required!  
+✅ Henter brændstofpriser i realtid fra et online API.
+✅ Understøtter benzin-, diesel- og el-ladepriser.
+✅ Fjerner automatisk ubrugte enheder efter en ny konfiguration.
+✅ Integration opdaterer priser hver time via en Home Assistant DataUpdateCoordinator.
+✅ Fuldt konfigurerbar via Home Assistant-brugerfladen – ingen YAML nødvendig!
 
 ---
 
