@@ -28,11 +28,11 @@
 
 ## 🚀 **Funktioner**
 
-✅ Henter brændstofpriser i realtid fra et online API.
-✅ Understøtter benzin-, diesel- og el-ladepriser.
-✅ Fjerner automatisk ubrugte enheder efter en ny konfiguration.
-✅ Integration opdaterer priser hver time via en Home Assistant DataUpdateCoordinator.
-✅ Fuldt konfigurerbar via Home Assistant-brugerfladen – ingen YAML nødvendig!
+- Henter brændstofpriser i realtid fra et online API.
+- Understøtter benzin-, diesel- og el-ladepriser.
+- Fjerner automatisk ubrugte enheder efter en ny konfiguration.
+- Integration opdaterer priser hver time via en Home Assistant DataUpdateCoordinator.
+- Fuldt konfigurerbar via Home Assistant-brugerfladen – ingen YAML nødvendig!
 
 ---
 
