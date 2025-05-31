@@ -1,12 +1,12 @@
 # Brændstofpriser v3 - Home Assistant integration
 
 
-[![Version](https://img.shields.io/github/v/release/UnoSite/Braendstofpriser?label=version&style=for-the-badge)](https://github.com/UnoSite/Braendstofpriser/releases/latest)
-[![Last Commit](https://img.shields.io/github/last-commit/UnoSite/Braendstofpriser?style=for-the-badge)](https://github.com/UnoSite/Braendstofpriser/commits/main/)
-[![License](https://img.shields.io/github/license/UnoSite/Braendstofpriser?style=for-the-badge)](https://github.com/UnoSite/Braendstofpriser/blob/main/LICENSE.md)
-[![Code Size](https://img.shields.io/github/languages/code-size/UnoSite/Braendstofpriser?style=for-the-badge)](#)
-[![Stars](https://img.shields.io/github/stars/UnoSite/Braendstofpriser?style=for-the-badge)](#)
-[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/UnoSite/Braendstofpriser/total?style=for-the-badge)](#)
+[![Version](https://img.shields.io/github/v/release/UnoSite/Braendstofpriser?display_name=tag&style=for-the-badge&labelColor=ccc&color=a4d57c)](https://github.com/UnoSite/Braendstofpriser/releases/latest)
+[![Last Commit](https://img.shields.io/github/last-commit/UnoSite/Braendstofpriser?style=for-the-badge&labelColor=ccc&color=a4d57c)](https://github.com/UnoSite/Braendstofpriser/commits/main/)
+[![License](https://img.shields.io/github/license/UnoSite/Braendstofpriser?style=for-the-badge&labelColor=ccc&color=a4d57c)](https://github.com/UnoSite/Braendstofpriser/blob/main/LICENSE.md)
+[![Code Size](https://img.shields.io/github/languages/code-size/UnoSite/Braendstofpriser?style=for-the-badge&labelColor=ccc&color=a4d57c)](#)
+[![Stars](https://img.shields.io/github/stars/UnoSite/Braendstofpriser?style=for-the-badge&labelColor=ccc&color=a4d57c)](#)
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/UnoSite/Braendstofpriser/total?style=for-the-badge&labelColor=ccc&color=a4d57c)](#)
 
 ![Logo](https://github.com/UnoSite/Braendstofpriser/blob/main/logo.png)
 
