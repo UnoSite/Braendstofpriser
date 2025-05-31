@@ -1,18 +1,17 @@
 # Brændstofpriser v3 - Home Assistant integration
 
-
-[![Version](https://img.shields.io/github/v/release/UnoSite/Braendstofpriser?display_name=tag&style=for-the-badge&labelColor=ccc&color=a4d57c)](https://github.com/UnoSite/Braendstofpriser/releases/latest)
-[![Last Commit](https://img.shields.io/github/last-commit/UnoSite/Braendstofpriser?style=for-the-badge&labelColor=ccc&color=a4d57c)](https://github.com/UnoSite/Braendstofpriser/commits/main/)
-[![License](https://img.shields.io/github/license/UnoSite/Braendstofpriser?style=for-the-badge&labelColor=ccc&color=a4d57c)](https://github.com/UnoSite/Braendstofpriser/blob/main/LICENSE.md)
-[![Code Size](https://img.shields.io/github/languages/code-size/UnoSite/Braendstofpriser?style=for-the-badge&labelColor=ccc&color=a4d57c)](#)
-[![Stars](https://img.shields.io/github/stars/UnoSite/Braendstofpriser?style=for-the-badge&labelColor=ccc&color=a4d57c)](#)
-[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/UnoSite/Braendstofpriser/total?style=for-the-badge&labelColor=ccc&color=a4d57c)](#)
+[![Version](https://img.shields.io/github/v/release/UnoSite/Braendstofpriser?display_name=tag&style=for-the-badge&color=a4d57c)](https://github.com/UnoSite/Braendstofpriser/releases/latest)
+[![Last Commit](https://img.shields.io/github/last-commit/UnoSite/Braendstofpriser?style=for-the-badge&color=a4d57c)](https://github.com/UnoSite/Braendstofpriser/commits/main/)
+[![License](https://img.shields.io/github/license/UnoSite/Braendstofpriser?style=for-the-badge&color=a4d57c)](https://github.com/UnoSite/Braendstofpriser/blob/main/LICENSE.md)
+[![Code Size](https://img.shields.io/github/languages/code-size/UnoSite/Braendstofpriser?style=for-the-badge&color=a4d57c)](#)
+[![Stars](https://img.shields.io/github/stars/UnoSite/Braendstofpriser?style=for-the-badge&color=a4d57c)](#)
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/UnoSite/Braendstofpriser/total?style=for-the-badge&color=a4d57c)](#)
 
 ![Logo](https://github.com/UnoSite/Braendstofpriser/blob/main/logo.png)
 
-[![Sponsor Github](https://img.shields.io/badge/Sponsor-Github-EA4AAA?style=for-the-badge&logo=githubsponsors)](https://github.com/sponsors/UnoSite)\
-[![Sponsor Buy Me a Coffee](https://img.shields.io/badge/Sponsor-Buy%20me%20a%20coffee-FFDD00?style=for-the-badge&logo=buymeacoffee)](https://buymeacoffee.com/UnoSite)\
-[![Sponsor PayPal.Me](https://img.shields.io/badge/Sponsor-paypal.me-003087?style=for-the-badge&logo=paypal)](https://paypal.me/UnoSite)
+[![Sponsor Github](https://img.shields.io/badge/Sponsor-Github-EA4AAA?style=for-the-badge&logo=githubsponsors&logoColor=EA4AAA)](https://github.com/sponsors/UnoSite)\
+[![Sponsor Buy Me a Coffee](https://img.shields.io/badge/Sponsor-Buy_Me_a_Coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=FFDD00)](https://buymeacoffee.com/UnoSite)\
+[![Sponsor PayPal.Me](https://img.shields.io/badge/Sponsor-PayPal.ME-003087?style=for-the-badge&logo=paypal&logoColor=003087)](https://paypal.me/UnoSite)
 
 ---
 
@@ -43,7 +42,7 @@
 2. Søg efter **Brændstofpriser** i HACS og installer integrationen.
 3. Genstart Home Assistant.
 
-[![Installer via hacs.](https://img.shields.io/badge/Install_via-HACS-41BDF5?style=for-the-badge&logo=homeassistantcommunitystore
+[![Installer via hacs.](https://img.shields.io/badge/Install_integration_via-HACS-41BDF5?style=for-the-badge&logo=homeassistantcommunitystore
 )](https://my.home-assistant.io/redirect/hacs_repository/?owner=UnoSite&repository=Braendstofpriser&category=Integration)
 
 ### 🔹 **Manuel Installation**
