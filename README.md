@@ -18,7 +18,6 @@
 ## 📃 **Beskrivelse**
 
 **Brændstofpriser** er en custom integration til Home Assistant, der henter live brændstofpriser fra forskellige udbydere i Danmark. Denne integration gør det muligt at overvåge opdaterede brændstofpriser direkte i dit Home Assistant-dashboard.
-
 - Opdaterer brændstofpriser automatisk hver time.
 - Understøtter flere brændstofudbydere og brændstoftyper.
 - Nem opsætning via Home Assistant-brugerfladen.
@@ -57,47 +56,52 @@
 
 ## ⚙️ **Konfigurering**
 
-Once installed, you can configure the integration directly from the Home Assistant UI.
+Når integrationen er installeret, kan du konfigurere den direkte fra Home Assistant-brugerfladen.
 
-### **Initial Setup**
-1. **Select fuel providers** – Choose which companies' fuel prices you want to track.
-2. **Select fuel types** – Choose which fuel products you want to monitor.
+### **Første opsætning**
+1. Vælg forhandlere – Vælg hvilke forhandlere du vil overvåge.
+2. Vælg type-lister – Vælg hvilke lister du vil overvåge.
 
-### **Reconfiguration**
-- If you want to **add or remove providers/products**, simply use the **Reconfigure** option in Home Assistant.
-- **Unused entities will be automatically removed** when updating your selections.
+### **Genkonfiguration**
+- Hvis du vil tilføje eller fjerne forhandlere/lister, skal du blot bruge Genkonfigurer-funktionen i Home Assistant.
+- Ubrugte enheder fjernes automatisk, når du opdaterer dine valg.
 
 ---
 
 ## ⛽ **Tilgængelige forhandlere**
-| Forhandler |
-|-------------|
-| Benzin 92 (E5) |
-| Benzin 95 (E10) |
-| Benzin 95+ (E10) |
-| Benzin 100 (E5) |
-| Diesel (B7) |
-| Diesel+ (B7) |
-| HVO (XTL) |
-| EL (Normal) |
-| EL (Hurtig) |
-| EL (Lyn) |
+
+| Forhandlere | Pumpepriser | Listepriser | Ladepriser |
+|:------------|:-----------:|:-----------:|:----------:|
+| Circle K    | ✅          | ✅          | ✅         |
+| Clever      | ⛔          | ⛔          | ✅         |
+| E.ON        | ⛔          | ⛔          | ✅         |
+| F24         | ✅          | ⛔          | ✅         |
+| Go'on       | ✅          | ✅          | ⛔         |
+| Ingo        | ✅          | ⛔          | ⛔         |
+| Oil!        | ✅          | ✅          | ⛔         |
+| OK          | ✅          | ✅          | ✅         |
+| Q8          | ✅          | ✅          | ✅         |
+| Shell       | ⛔          | ✅          | ✅         |
+| UnoX        | ✅          | ✅          | ⛔         |
 
 ---
 
 ## 🔧 **Opdater integrationen**
-When a new version is available:
-1. **HACS Users** – Update directly from HACS.
-2. **Manual Users** – Replace the `braendstofpriser` folder with the latest release and restart Home Assistant.
+
+Når en ny version er tilgængelig:
+1. **HACS-brugere** – Opdater direkte fra HACS.
+2. **Manuelle brugere** – Erstat mappen `braendstofpriser` med den nyeste udgivelse og genstart Home Assistant.
 
 ---
 
 ## ❓ **Anmeld fejl eller få hjælp**
-If you encounter any issues or have feature requests, please open an issue on GitHub:
+
+Hvis du støder på problemer eller har forslag til nye funktioner, så opret venligst en issue på GitHub:
 
 [![Static Badge](https://img.shields.io/badge/Report-issues-E00000?style=for-the-badge)](https://github.com/UnoSite/Braendstofpriser/issues)
 
 ---
 
 ## 📜 **License**
-This integration is licensed under the [MIT License](https://github.com/UnoSite/Braendstofpriser/blob/main/LICENSE.md).
+
+Denne integration er licenseret under [MIT-licensen](https://github.com/UnoSite/Braendstofpriser/blob/main/LICENSE.md).
