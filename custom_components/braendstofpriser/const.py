@@ -20,7 +20,7 @@ CONF_COMPANIES = "companies"  # Valgte selskaber
 CONF_PRODUCTS = "products"  # Valgte braendstofprodukter
 
 # 🔹 URL til API, der leverer braendstofpriser
-API_URL = "https://raw.githubusercontent.com/UnoSite/Braendstofpriser/refs/heads/prices/data/listprices.json"
+API_URL = "https://raw.githubusercontent.com/UnoSite/Braendstofpriser/refs/heads/main/data/listprices.json"
 
 # 🔹 Dictionary over understoettede braendstofprodukter
 PRODUCTS = {
