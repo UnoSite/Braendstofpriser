@@ -1,9 +1,12 @@
 import logging
+
 import requests
+
 from .const import API_URL
 
 # Opret logger til integrationen
 _LOGGER = logging.getLogger(__name__)
+
 
 def fetch_fuel_data():
     """
@@ -15,7 +18,7 @@ def fetch_fuel_data():
 
     Returns:
         list: Liste af braendstofpriser eller en tom liste ved fejl.
-    
+
     Raises:
         RuntimeError: Hvis der opstaar en netvaerksfejl, JSON-fejl eller ugyldigt svar.
     """
@@ -40,7 +43,9 @@ def fetch_fuel_data():
         # Hent 'priser' fra data
         fuel_prices = data.get("priser", [])
         if not isinstance(fuel_prices, list):
-            _LOGGER.error("API returnerede en ugyldig 'priser'-struktur: %s", fuel_prices)
+            _LOGGER.error(
+                "API returnerede en ugyldig 'priser'-struktur: %s", fuel_prices
+            )
             raise RuntimeError("API returnerede en ugyldig 'priser'-struktur")
 
         # Log hvis ingen priser findes

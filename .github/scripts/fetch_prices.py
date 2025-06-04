@@ -1,12 +1,14 @@
-import os
 import json
+import os
+import time
+from datetime import datetime
+
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
-import time
 
 URL = os.getenv("FUEL_PRICE_URL")
 OUTPUT_FILE = "data/listprices.json"
+
 
 def fetch_data():
     headers = {
@@ -26,7 +28,7 @@ def fetch_data():
             else:
                 raise Exception(f"Kunne ikke hente data efter 5 forsøg: {e}")
 
-    soup = BeautifulSoup(response.content, 'html.parser')
+    soup = BeautifulSoup(response.content, "html.parser")
     table_section = soup.find(id="no-more-tables")
     if not table_section:
         raise Exception("Kunne ikke finde sektionen 'no-more-tables' på siden")
@@ -37,22 +39,25 @@ def fetch_data():
 
     for row in rows:
         cells = row.find_all("td")
-        prices.append({
-            "selskab": cells[0].text.strip(),
-            "blyfri_92": cells[1].text.strip() or None,
-            "blyfri_95_e10": cells[2].text.strip() or None,
-            "blyfri_95_plus_e10": cells[3].text.strip() or None,
-            "blyfri_plus_e5": cells[4].text.strip() or None,
-            "diesel_b7": cells[5].text.strip() or None,
-            "diesel_plus": cells[6].text.strip() or None,
-            "hvo_xtl": cells[7].text.strip() or None,
-            "el_normal": cells[8].text.strip() or None,
-            "el_hurtig": cells[9].text.strip() or None,
-            "el_lyn": cells[10].text.strip() or None,
-            "sidst_opdateret": cells[11].text.strip() or None,
-        })
+        prices.append(
+            {
+                "selskab": cells[0].text.strip(),
+                "blyfri_92": cells[1].text.strip() or None,
+                "blyfri_95_e10": cells[2].text.strip() or None,
+                "blyfri_95_plus_e10": cells[3].text.strip() or None,
+                "blyfri_plus_e5": cells[4].text.strip() or None,
+                "diesel_b7": cells[5].text.strip() or None,
+                "diesel_plus": cells[6].text.strip() or None,
+                "hvo_xtl": cells[7].text.strip() or None,
+                "el_normal": cells[8].text.strip() or None,
+                "el_hurtig": cells[9].text.strip() or None,
+                "el_lyn": cells[10].text.strip() or None,
+                "sidst_opdateret": cells[11].text.strip() or None,
+            }
+        )
 
     return prices
+
 
 def update_json_file(prices):
     now = datetime.now().strftime("%Y-%m-%d")
@@ -61,14 +66,15 @@ def update_json_file(prices):
             "dato": now,
             "ændring": {
                 "benzin": "N/A",  # Kan udvides med mere logik hvis ønsket
-                "diesel": "N/A"
-            }
+                "diesel": "N/A",
+            },
         },
-        "priser": prices
+        "priser": prices,
     }
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
+
 
 def main():
     try:
@@ -77,6 +83,7 @@ def main():
         print("Brændstofpriser opdateret og gemt.")
     except Exception as e:
         print(f"Fejl under kørsel: {e}")
+
 
 if __name__ == "__main__":
     main()

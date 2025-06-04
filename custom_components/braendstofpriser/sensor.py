@@ -1,18 +1,27 @@
 import logging
 from datetime import timedelta
-from homeassistant.core import HomeAssistant
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, CoordinatorEntity, UpdateFailed
+
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import async_get as async_get_device_registry
 from homeassistant.helpers.entity import DeviceInfo
-from .const import *
+from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+    UpdateFailed,
+)
+
 from .api import *
+from .const import *
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities):
+
+async def async_setup_entry(
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities
+):
     """Opsaetter sensorer baseret paa brugerens valg i config flow."""
     _LOGGER.info("Opsaetter braendstofpriser sensorer for entry: %s", entry.entry_id)
 
@@ -39,12 +48,34 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
                         price_value = float(price)
                         unique_id = f"{entry.entry_id}_{company}_{product}"
                         existing_entity_ids.add(unique_id)
-                        entities.append(FuelPriceSensor(coordinator, entry.entry_id, company, product, last_updated))
-                        _LOGGER.debug("Oprettet sensor: %s - %s med pris %s", company, PRODUCTS.get(product, product), price_value)
+                        entities.append(
+                            FuelPriceSensor(
+                                coordinator,
+                                entry.entry_id,
+                                company,
+                                product,
+                                last_updated,
+                            )
+                        )
+                        _LOGGER.debug(
+                            "Oprettet sensor: %s - %s med pris %s",
+                            company,
+                            PRODUCTS.get(product, product),
+                            price_value,
+                        )
                     except (TypeError, ValueError):
-                        _LOGGER.warning("Ugyldig pris-data for %s - %s: %s. Sensor oprettes ikke.", company, product, price)
+                        _LOGGER.warning(
+                            "Ugyldig pris-data for %s - %s: %s. Sensor oprettes ikke.",
+                            company,
+                            product,
+                            price,
+                        )
                 else:
-                    _LOGGER.info("Ingen pris angivet for %s - %s. Sensor oprettes ikke.", company, PRODUCTS.get(product, product))
+                    _LOGGER.info(
+                        "Ingen pris angivet for %s - %s. Sensor oprettes ikke.",
+                        company,
+                        PRODUCTS.get(product, product),
+                    )
 
     async_add_entities(entities)
 
@@ -52,22 +83,31 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
     _LOGGER.info("Braendstofpriser sensorer oprettet for entry: %s", entry.entry_id)
 
-async def remove_unused_entities_and_devices(hass: HomeAssistant, entry: ConfigEntry, active_entity_ids: set):
+
+async def remove_unused_entities_and_devices(
+    hass: HomeAssistant, entry: ConfigEntry, active_entity_ids: set
+):
     """Fjerner gamle sensorer og enheder, der ikke laengere er relevante."""
     entity_registry = async_get_entity_registry(hass)
     device_registry = async_get_device_registry(hass)
 
     for entity_id, entity in list(entity_registry.entities.items()):
-        if entity.unique_id.startswith(entry.entry_id) and entity.unique_id not in active_entity_ids:
+        if (
+            entity.unique_id.startswith(entry.entry_id)
+            and entity.unique_id not in active_entity_ids
+        ):
             _LOGGER.info("Fjerner foraeldet sensor: %s", entity_id)
             entity_registry.async_remove(entity_id)
 
     for device_id, device in list(device_registry.devices.items()):
         if entry.entry_id in device.config_entries:
-            related_entities = [e for e in entity_registry.entities.values() if e.device_id == device.id]
+            related_entities = [
+                e for e in entity_registry.entities.values() if e.device_id == device.id
+            ]
             if not related_entities:
                 _LOGGER.info("Fjerner foraeldet enhed: %s", device.name)
                 device_registry.async_remove_device(device.id)
+
 
 class FuelPriceCoordinator(DataUpdateCoordinator):
     """Haandterer API-kald og opdatering af sensorer."""
@@ -78,7 +118,7 @@ class FuelPriceCoordinator(DataUpdateCoordinator):
             hass,
             logger=_LOGGER,
             name="Braendstofpriser",
-            update_interval=timedelta(hours=1)
+            update_interval=timedelta(hours=1),
         )
 
     async def _async_update_data(self):
@@ -97,6 +137,7 @@ class FuelPriceCoordinator(DataUpdateCoordinator):
         except Exception as err:
             _LOGGER.error("Fejl ved hentning af braendstofpriser: %s", err)
             raise UpdateFailed(f"Error fetching data: {err}") from err
+
 
 class FuelPriceSensor(CoordinatorEntity, SensorEntity):
     """Sensor, der repraesenterer prisen paa et produkt fra et selskab."""
@@ -117,7 +158,7 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
             name=f"{company} Braendstofpriser",
             manufacturer=CONF_MANUFACTURER,
             model=CONF_MODEL,
-            configuration_url="https://github.com/UnoSite/Braendstofpriser"
+            configuration_url="https://github.com/UnoSite/Braendstofpriser",
         )
         _LOGGER.debug("Oprettet sensor: %s", self._attr_name)
 
@@ -128,13 +169,22 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
             if entry.get("selskab") == self._company:
                 pris = entry.get(self._product)
                 if not pris or not pris.strip():
-                    _LOGGER.debug("Ingen pris tilgaengelig for %s - %s. Ignorerer sensor-opdatering.", self._company, self._product)
+                    _LOGGER.debug(
+                        "Ingen pris tilgaengelig for %s - %s. Ignorerer sensor-opdatering.",
+                        self._company,
+                        self._product,
+                    )
                     return None
 
                 try:
                     return float(pris)
                 except (TypeError, ValueError):
-                    _LOGGER.error("Kunne ikke konvertere pris til float for %s - %s: %s", self._company, self._product, pris)
+                    _LOGGER.error(
+                        "Kunne ikke konvertere pris til float for %s - %s: %s",
+                        self._company,
+                        self._product,
+                        pris,
+                    )
                     return None
 
         _LOGGER.debug("Ingen pris fundet for %s", self._attr_name)
@@ -151,7 +201,7 @@ class FuelPriceSensor(CoordinatorEntity, SensorEntity):
         return {
             "selskab": self._company,
             "produkt": PRODUCTS.get(self._product, self._product),
-            "sidst_opdateret": self._last_updated
+            "sidst_opdateret": self._last_updated,
         }
 
     def get_icon(self, product):

@@ -33,7 +33,7 @@ PRODUCTS = {
     "hvo_xtl": "HVO (XTL)",
     "el_normal": "EL (Normal)",
     "el_hurtig": "EL (Hurtig)",
-    "el_lyn": "EL (Turbo)"
+    "el_lyn": "EL (Turbo)",
 }
 
 # 🔹 Omvendt opslag for produktnavne → noegler (bruges i config_flow og sensor)
