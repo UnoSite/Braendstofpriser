@@ -11,9 +11,10 @@ jobs:
     timeout-minutes: 3
 
     steps:
-    - name: Tjek repo ud
+    - name: Tjek repo ud (prices branch)
       uses: actions/checkout@v4.2.2
       with:
+        ref: prices  # <-- Tjek 'prices'-branch ud
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Opsæt Python
@@ -39,5 +40,5 @@ jobs:
         git add data/listprices.json
         if ! git diff --cached --quiet; then
           git commit -m "Opdateret brændstofpriser"
-          git push --force
+          git push origin prices  # <-- Push direkte til 'prices'-branch
         fi
