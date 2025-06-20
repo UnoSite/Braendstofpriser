@@ -8,6 +8,76 @@
   },
   "priser": [
     {
+      "selskab": "Circle K",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "14.29",
+      "blyfri_95_plus_e10": "15.19",
+      "blyfri_plus_e5": "​",
+      "diesel_b7": "13.79",
+      "diesel_plus": "14.69",
+      "hvo_xtl": "​",
+      "el_normal": "​",
+      "el_hurtig": "​",
+      "el_lyn": "3.59",
+      "sidst_opdateret": "21-06-2025 00:00"
+    },
+    {
+      "selskab": "Shell",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "15.49",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "17.69",
+      "diesel_b7": "14.99",
+      "diesel_plus": "15.89",
+      "hvo_xtl": "16.19",
+      "el_normal": "​",
+      "el_hurtig": "​",
+      "el_lyn": "3.49",
+      "sidst_opdateret": "21-06-2025 00:00"
+    },
+    {
+      "selskab": "OK",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "14.19",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "16.16",
+      "diesel_b7": "13.69",
+      "diesel_plus": "​",
+      "hvo_xtl": "​",
+      "el_normal": "2.49",
+      "el_hurtig": "2.99",
+      "el_lyn": "3.49",
+      "sidst_opdateret": "21-06-2025 00:00"
+    },
+    {
+      "selskab": "Q8",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "14.29",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "15.39",
+      "diesel_b7": "13.79",
+      "diesel_plus": "14.69",
+      "hvo_xtl": "​",
+      "el_normal": "3.09",
+      "el_hurtig": "​",
+      "el_lyn": "3.59",
+      "sidst_opdateret": "21-06-2025 00:00"
+    },
+    {
+      "selskab": "F24",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "14.19",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "15.29",
+      "diesel_b7": "13.69",
+      "diesel_plus": "14.59",
+      "hvo_xtl": "​",
+      "el_normal": "​",
+      "el_hurtig": "​",
+      "el_lyn": "3.75",
+      "sidst_opdateret": "21-06-2025 00:00"
+    },
+    {
       "selskab": "Go'on",
       "blyfri_92": "14.16",
       "blyfri_95_e10": "14.19",
@@ -19,7 +89,21 @@
       "el_normal": "​",
       "el_hurtig": "​",
       "el_lyn": "​",
-      "sidst_opdateret": "20-06-2025 13:00"
+      "sidst_opdateret": "21-06-2025 00:00"
+    },
+    {
+      "selskab": "Clever",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "​",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "​",
+      "diesel_b7": "​",
+      "diesel_plus": "​",
+      "hvo_xtl": "​",
+      "el_normal": "3.49",
+      "el_hurtig": "3.49",
+      "el_lyn": "4.99",
+      "sidst_opdateret": "21-06-2025 00:00"
     },
     {
       "selskab": "OIL! tank & go",
@@ -36,20 +120,6 @@
       "sidst_opdateret": "20-06-2025 12:00"
     },
     {
-      "selskab": "Circle K",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "14.29",
-      "blyfri_95_plus_e10": "15.19",
-      "blyfri_plus_e5": "​",
-      "diesel_b7": "13.79",
-      "diesel_plus": "14.69",
-      "hvo_xtl": "​",
-      "el_normal": "​",
-      "el_hurtig": "​",
-      "el_lyn": "3.59",
-      "sidst_opdateret": "20-06-2025 11:00"
-    },
-    {
       "selskab": "ingo",
       "blyfri_92": "​",
       "blyfri_95_e10": "14.19",
@@ -62,76 +132,6 @@
       "el_hurtig": "​",
       "el_lyn": "​",
       "sidst_opdateret": "20-06-2025 11:00"
-    },
-    {
-      "selskab": "OK",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "14.19",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "16.16",
-      "diesel_b7": "13.69",
-      "diesel_plus": "​",
-      "hvo_xtl": "​",
-      "el_normal": "2.49",
-      "el_hurtig": "2.99",
-      "el_lyn": "3.49",
-      "sidst_opdateret": "20-06-2025 11:00"
-    },
-    {
-      "selskab": "Q8",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "14.29",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "15.39",
-      "diesel_b7": "13.79",
-      "diesel_plus": "14.69",
-      "hvo_xtl": "​",
-      "el_normal": "3.09",
-      "el_hurtig": "​",
-      "el_lyn": "3.59",
-      "sidst_opdateret": "20-06-2025 11:00"
-    },
-    {
-      "selskab": "F24",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "14.19",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "15.29",
-      "diesel_b7": "13.69",
-      "diesel_plus": "14.59",
-      "hvo_xtl": "​",
-      "el_normal": "​",
-      "el_hurtig": "​",
-      "el_lyn": "3.75",
-      "sidst_opdateret": "20-06-2025 11:00"
-    },
-    {
-      "selskab": "Shell",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "15.39",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "17.59",
-      "diesel_b7": "14.59",
-      "diesel_plus": "15.49",
-      "hvo_xtl": "15.79",
-      "el_normal": "​",
-      "el_hurtig": "​",
-      "el_lyn": "3.49",
-      "sidst_opdateret": "20-06-2025 00:00"
-    },
-    {
-      "selskab": "Clever",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "​",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "​",
-      "diesel_b7": "​",
-      "diesel_plus": "​",
-      "hvo_xtl": "​",
-      "el_normal": "3.49",
-      "el_hurtig": "3.49",
-      "el_lyn": "4.99",
-      "sidst_opdateret": "20-06-2025 00:00"
     }
   ]
 }
