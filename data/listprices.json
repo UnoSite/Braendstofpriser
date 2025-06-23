@@ -8,6 +8,20 @@
   },
   "priser": [
     {
+      "selskab": "OIL! tank & go",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "14.19",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "​",
+      "diesel_b7": "13.69",
+      "diesel_plus": "​",
+      "hvo_xtl": "14.69",
+      "el_normal": "​",
+      "el_hurtig": "​",
+      "el_lyn": "​",
+      "sidst_opdateret": "23-06-2025 12:00"
+    },
+    {
       "selskab": "Shell",
       "blyfri_92": "​",
       "blyfri_95_e10": "15.49",
@@ -104,20 +118,6 @@
       "el_hurtig": "​",
       "el_lyn": "3.59",
       "sidst_opdateret": "21-06-2025 00:00"
-    },
-    {
-      "selskab": "OIL! tank & go",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "14.19",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "​",
-      "diesel_b7": "13.69",
-      "diesel_plus": "​",
-      "hvo_xtl": "14.69",
-      "el_normal": "​",
-      "el_hurtig": "​",
-      "el_lyn": "​",
-      "sidst_opdateret": "20-06-2025 12:00"
     },
     {
       "selskab": "ingo",
