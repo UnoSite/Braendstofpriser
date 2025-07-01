@@ -8,6 +8,20 @@
   },
   "priser": [
     {
+      "selskab": "Q8",
+      "blyfri_92": "​",
+      "blyfri_95_e10": "13.69",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "14.79",
+      "diesel_b7": "12.89",
+      "diesel_plus": "13.79",
+      "hvo_xtl": "​",
+      "el_normal": "2.99",
+      "el_hurtig": "​",
+      "el_lyn": "3.45",
+      "sidst_opdateret": "01-07-2025 18:00"
+    },
+    {
       "selskab": "OIL! tank & go",
       "blyfri_92": "​",
       "blyfri_95_e10": "13.59",
@@ -61,20 +75,6 @@
       "el_normal": "2.35",
       "el_hurtig": "2.85",
       "el_lyn": "3.35",
-      "sidst_opdateret": "01-07-2025 00:00"
-    },
-    {
-      "selskab": "Q8",
-      "blyfri_92": "​",
-      "blyfri_95_e10": "13.69",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "14.79",
-      "diesel_b7": "12.89",
-      "diesel_plus": "13.79",
-      "hvo_xtl": "​",
-      "el_normal": "3.09",
-      "el_hurtig": "​",
-      "el_lyn": "3.59",
       "sidst_opdateret": "01-07-2025 00:00"
     },
     {
