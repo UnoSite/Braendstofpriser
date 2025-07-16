@@ -8,6 +8,20 @@
   },
   "priser": [
     {
+      "selskab": "Go'on",
+      "blyfri_92": "13.36",
+      "blyfri_95_e10": "13.39",
+      "blyfri_95_plus_e10": "​",
+      "blyfri_plus_e5": "​",
+      "diesel_b7": "13.09",
+      "diesel_plus": "​",
+      "hvo_xtl": "​",
+      "el_normal": "​",
+      "el_hurtig": "​",
+      "el_lyn": "​",
+      "sidst_opdateret": "16-07-2025 13:00"
+    },
+    {
       "selskab": "OIL! tank & go",
       "blyfri_92": "​",
       "blyfri_95_e10": "13.39",
@@ -90,20 +104,6 @@
       "el_hurtig": "​",
       "el_lyn": "3.75",
       "sidst_opdateret": "16-07-2025 11:00"
-    },
-    {
-      "selskab": "Go'on",
-      "blyfri_92": "13.26",
-      "blyfri_95_e10": "13.29",
-      "blyfri_95_plus_e10": "​",
-      "blyfri_plus_e5": "​",
-      "diesel_b7": "13.09",
-      "diesel_plus": "​",
-      "hvo_xtl": "​",
-      "el_normal": "​",
-      "el_hurtig": "​",
-      "el_lyn": "​",
-      "sidst_opdateret": "16-07-2025 01:00"
     },
     {
       "selskab": "Shell",
